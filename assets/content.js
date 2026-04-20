@@ -1,7 +1,8 @@
 const API_HOST = "https://ergouzi.life";
 const OPENAI_BASE = `${API_HOST}/v1`;
-const CLAUDE_BASE = `${API_HOST}/claude`;
-const GEMINI_BASE = `${API_HOST}/gemini`;
+const CLAUDE_BASE = API_HOST;
+const ANTHROPIC_SDK_BASE = API_HOST;
+const GEMINI_BASE = API_HOST;
 const PURCHASE_WALLET_IMAGE = "./assets/purchase/step1.png";
 const PURCHASE_PRODUCT_IMAGE = "./assets/purchase/step2.png";
 const PURCHASE_CODE_IMAGE = "./assets/purchase/step3.png";
@@ -919,10 +920,15 @@ https://{your-next-chat-domain}/#/?settings={"key":"<YOUR_API_KEY>","url":"${API
 npm install -g @anthropic-ai/claude-code
 
 export ANTHROPIC_API_KEY="your_api_key_here"
-export ANTHROPIC_BASE_URL="${CLAUDE_BASE}"
+export ANTHROPIC_BASE_URL="${ANTHROPIC_SDK_BASE}"
 
 claude
           `,
+        )}
+        ${callout(
+          "info",
+          "这里用根地址",
+          `Claude Code 这一类 Anthropic 客户端这里填写的是根地址 <code class="inline-code">${ANTHROPIC_SDK_BASE}</code>，不要手动再加 <code class="inline-code">/claude</code>。`
         )}
         ${callout(
           "warn",
@@ -1013,6 +1019,11 @@ EOF
 
 gemini
           `,
+        )}
+        ${callout(
+          "info",
+          "Gemini 这里也用根地址",
+          `Gemini CLI 的 <code class="inline-code">GOOGLE_GEMINI_BASE_URL</code> 这里填写 <code class="inline-code">${GEMINI_BASE}</code>，不要手动再加 <code class="inline-code">/gemini</code>。`
         )}
       </section>
 
@@ -1545,7 +1556,7 @@ curl --request POST \\
               </tr>
               <tr>
                 <th>Endpoint</th>
-                <td><code class="inline-code">POST /claude/v1/messages</code></td>
+                <td><code class="inline-code">POST /v1/messages</code></td>
               </tr>
               <tr>
                 <th>鉴权头</th>
@@ -1622,11 +1633,11 @@ curl --request POST \\
               </tr>
               <tr>
                 <th>非流式</th>
-                <td><code class="inline-code">POST /gemini/v1beta/models/{model}:generateContent</code></td>
+                <td><code class="inline-code">POST /v1beta/models/{model}:generateContent</code></td>
               </tr>
               <tr>
                 <th>流式 SSE</th>
-                <td><code class="inline-code">POST /gemini/v1beta/models/{model}:streamGenerateContent?alt=sse</code></td>
+                <td><code class="inline-code">POST /v1beta/models/{model}:streamGenerateContent?alt=sse</code></td>
               </tr>
               <tr>
                 <th>鉴权头</th>
@@ -1797,7 +1808,13 @@ print(response.choices[0].message.content)
           "bash",
           `
 export ANTHROPIC_API_KEY="your_api_key_here"
+export ANTHROPIC_BASE_URL="${ANTHROPIC_SDK_BASE}"
         `,
+        )}
+        ${callout(
+          "info",
+          "Anthropic SDK 也用根地址",
+          `如果你在用官方 Anthropic SDK，这里的 base URL 也填写 <code class="inline-code">${ANTHROPIC_SDK_BASE}</code>，不要手动拼 <code class="inline-code">/claude</code>。`
         )}
       </section>
 
@@ -1822,7 +1839,7 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
-  baseURL: "${CLAUDE_BASE}",
+  baseURL: process.env.ANTHROPIC_BASE_URL || "${ANTHROPIC_SDK_BASE}",
 });
 
 const message = await anthropic.messages.create({
@@ -1855,7 +1872,7 @@ import os
 
 client = anthropic.Anthropic(
     api_key=os.environ["ANTHROPIC_API_KEY"],
-    base_url="${CLAUDE_BASE}",
+    base_url=os.environ.get("ANTHROPIC_BASE_URL", "${ANTHROPIC_SDK_BASE}"),
 )
 
 message = client.messages.create(
@@ -1909,6 +1926,11 @@ print(message.content)
           `
 export GEMINI_API_KEY="your_api_key_here"
         `,
+        )}
+        ${callout(
+          "info",
+          "Gemini SDK 也用根地址",
+          `如果你在用 Google GenAI SDK，这里的 base URL 也填写 <code class="inline-code">${GEMINI_BASE}</code>，不要手动拼 <code class="inline-code">/gemini</code>。`
         )}
       </section>
 
@@ -2362,7 +2384,7 @@ import anthropic
 
 client = anthropic.Anthropic(
     api_key="your_api_key_here",
-    base_url="${CLAUDE_BASE}",
+    base_url="${ANTHROPIC_SDK_BASE}",
 )
 
 message = client.messages.create(
