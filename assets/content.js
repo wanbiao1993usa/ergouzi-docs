@@ -1,5 +1,5 @@
 const API_HOST = "https://ergouzi.life";
-const OPENAI_BASE = `${API_HOST}/v1`;
+const OPENAI_BASE = API_HOST;
 const CLAUDE_BASE = API_HOST;
 const ANTHROPIC_SDK_BASE = API_HOST;
 const GEMINI_BASE = API_HOST;
@@ -467,7 +467,7 @@ curl --request POST \\
       ${callout(
         "info",
         "先分清字段类型",
-        "如果应用字段叫 API Host / 站点地址 / 域名，通常填写根域名；如果字段叫 Base URL / apiBase / Endpoint，大多数 OpenAI 兼容应用都填写 /v1。"
+        "如果应用字段叫 API Host / 站点地址 / 域名，通常填写根域名；如果字段叫 Base URL / apiBase / Endpoint，这里也统一填写根域名。"
       )}
 
       <section>
@@ -575,7 +575,7 @@ curl --request POST \\
         <ul>
           <li>先准备一枚可用 API Key，并确认该 Key 所在分组已经开放你要用的模型。</li>
           <li>文本、多模态、图片、补全可能对应不同模型，客户端里看不到模型时优先检查模型名与权限。</li>
-          <li>同一个应用里如果同时存在 Host 和 Base URL 两种字段，不要重复拼接 <code class="inline-code">/v1</code>。</li>
+          <li>同一个应用里如果同时存在 Host 和 Base URL 两种字段，统一使用根域名，不要自己再拼额外路径。</li>
           <li>截图型原教程没有把字段逐项写出来的地方，我已经按其 OpenAI 兼容接入方式补成可执行配置；如果你的应用版本 UI 不同，以字段含义为准。</li>
         </ul>
       </section>
@@ -598,7 +598,7 @@ curl --request POST \\
       ${callout(
         "warn",
         "字段名相似但不完全一样",
-        "Next Chat 和 ChatWise 常见的是站点地址；Lobe Chat、Chatbox 这类更像开发工具的客户端，通常填写的是带 /v1 的 OpenAI 兼容 Base URL。"
+        "Next Chat 和 ChatWise 常见的是站点地址；Lobe Chat、Chatbox 这类更像开发工具的客户端，虽然字段叫 Base URL，但这里也统一填写根地址。"
       )}
 
       <section>
@@ -740,7 +740,7 @@ https://{your-next-chat-domain}/#/?settings={"key":"<YOUR_API_KEY>","url":"${API
         ${callout(
           "info",
           "这一节包含合理推断",
-          "原始集成页没有展开字段表，所以这里按同类 OpenAI 兼容客户端的常规填法给出最稳妥配置：Key 填你的令牌，地址优先填 /v1。"
+          "原始集成页没有展开字段表，所以这里按同类 OpenAI 兼容客户端的常规填法给出最稳妥配置：Key 填你的令牌，地址统一填根域名。"
         )}
         <div class="table-wrap">
           <table>
@@ -769,7 +769,7 @@ https://{your-next-chat-domain}/#/?settings={"key":"<YOUR_API_KEY>","url":"${API
       <section>
         <h2>这组应用最常见的问题</h2>
         <ul>
-          <li>界面里只让填站点地址时，不要再手工补一个 <code class="inline-code">/v1</code> 上去。</li>
+          <li>界面里只让填站点地址时，直接填根域名即可。</li>
           <li>提示模型不存在时，优先检查模型名是否和平台实际开放的一致，尤其是 Claude / Gemini 自定义模型别名。</li>
           <li>能保存但无法请求时，通常是 Key 无权限、地址填错，或客户端把根域名和 Base URL 重复拼接了。</li>
         </ul>
@@ -865,7 +865,7 @@ https://{your-next-chat-domain}/#/?settings={"key":"<YOUR_API_KEY>","url":"${API
         <ul>
           <li>先用一个稳定的通用文本模型把聊天功能接通，再单独优化自动补全模型。</li>
           <li>Cursor 如果看得到模型但请求失败，优先检查它实际发出的请求是否仍然走官方端点。</li>
-          <li>Continue 如果加载不到模型列表，通常是 <code class="inline-code">apiBase</code> 没带 <code class="inline-code">/v1</code> 或 Key 权限不足。</li>
+          <li>Continue 如果加载不到模型列表，通常是 <code class="inline-code">apiBase</code> 填错、被客户端重复拼接路径，或 Key 权限不足。</li>
         </ul>
       </section>
     `,
@@ -948,7 +948,7 @@ claude
 npm install -g @openai/codex
 
 export OPENAI_API_KEY="your_api_key_here"
-export OPENAI_BASE_URL="${OPENAI_BASE}"
+export OPENAI_BASE_URL="https://ergouzi.life"
 export OPENAI_MODEL="gpt-5.4-mini"
 
 codex
@@ -1097,7 +1097,7 @@ gemini
       <section>
         <h2>FluentRead</h2>
         <p>
-          FluentRead 既支持从控制台一键导入，也支持手动填写配置。手动模式下，它要求的是站点根域名，而不是带 <code class="inline-code">/v1</code> 的 SDK Base URL。
+          FluentRead 既支持从控制台一键导入，也支持手动填写配置。手动模式下，它要求的是站点根域名，而不是带额外路径的 SDK Base URL。
         </p>
         ${callout(
           "info",
@@ -1117,7 +1117,7 @@ gemini
               </tr>
               <tr>
                 <th>NewAPI 接口</th>
-                <td><code class="inline-code">${API_HOST}</code>（不带 <code class="inline-code">/v1</code>）</td>
+                <td><code class="inline-code">${API_HOST}</code></td>
               </tr>
               <tr>
                 <th>模型</th>
@@ -1213,7 +1213,7 @@ gemini
       <section>
         <h2>这组工具的排查顺序</h2>
         <ul>
-          <li>插件类工具导入成功但不工作时，先检查它最终写入的是根域名还是带 <code class="inline-code">/v1</code> 的地址。</li>
+          <li>插件类工具导入成功但不工作时，先检查它最终写入的是不是根域名，或者是否被客户端自动重复拼了路径。</li>
           <li>LangBot 知识库检索效果异常时，先单独确认 embedding 模型是否可用，而不是只盯着聊天模型。</li>
           <li>LunaTranslator 看不到模型列表时，优先检查接口模板是否复制对，以及新增接口开关是否真正启用。</li>
         </ul>
@@ -1265,7 +1265,7 @@ gemini
               <tr>
                 <td>API 地址</td>
                 <td><code class="inline-code">${API_HOST}</code></td>
-                <td>如果客户端要求填 Base URL，则填写 OpenAI 兼容地址 <code class="inline-code">${OPENAI_BASE}</code>。</td>
+                <td>如果客户端要求填 Base URL，也统一填写根地址 <code class="inline-code">${OPENAI_BASE}</code>。</td>
               </tr>
             </tbody>
           </table>
@@ -1273,7 +1273,7 @@ gemini
         ${callout(
           "warn",
           "地址怎么填看客户端字段名",
-          "如果字段叫“站点地址 / API Host / 域名”，填根域名；如果字段叫“Base URL”，通常填带 /v1 的 OpenAI 兼容地址。"
+          "如果字段叫“站点地址 / API Host / 域名”，填根域名；如果字段叫“Base URL”，这里也统一填根域名。"
         )}
       </section>
 
@@ -1458,7 +1458,7 @@ gemini
       ${callout(
         "info",
         "为什么推荐这一套",
-        "它的学习和迁移成本最低，文本、多模态、图片、音频都能沿用同一个 Bearer 鉴权和 /v1 前缀。"
+        "它的学习和迁移成本最低，文本、多模态、图片、音频都能沿用同一个 Bearer 鉴权和统一根地址。"
       )}
 
       <section>
@@ -1783,7 +1783,7 @@ print(response.choices[0].message.content)
         ${callout(
           "info",
           "关键点只有一个",
-          "只要把官方 SDK 的 baseURL 指向 Ergouzi 的 /v1，原本基于 OpenAI SDK 的调用代码通常不需要大改。"
+          "只要把官方 SDK 的 baseURL 指向 Ergouzi 的根地址，原本基于 OpenAI SDK 的调用代码通常不需要大改。"
         )}
       </section>
     `,
@@ -2068,7 +2068,7 @@ curl --request POST \\
         "API 调用示例",
         "Chat Completions",
         "传统聊天接口，适合大多数文本对话、多模态输入和函数调用场景。如果你已经有一套 OpenAI 风格 messages 结构，这一页最直接。",
-        "POST /v1/chat/completions",
+        "POST /chat/completions",
       )}
 
       <section>
@@ -2078,7 +2078,7 @@ curl --request POST \\
             <tbody>
               <tr>
                 <th>Endpoint</th>
-                <td><code class="inline-code">POST /v1/chat/completions</code></td>
+                <td><code class="inline-code">POST /chat/completions</code></td>
               </tr>
               <tr>
                 <th>Base URL</th>
@@ -2180,13 +2180,13 @@ curl --request POST \\
     group: "API 调用示例",
     title: "Responses",
     summary: "统一的新一代接口示例，适合新项目与更复杂输入。",
-    keywords: ["Responses", "v1/responses", "input", "multimodal"],
+    keywords: ["Responses", "responses", "input", "multimodal"],
     content: `
       ${pageHead(
         "API 调用示例",
         "Responses",
         "Responses 是更统一的新接口，适合新项目。它用 input 代替传统 messages，更适合组合文本、图片和结构化结果。",
-        "POST /v1/responses",
+        "POST /responses",
       )}
 
       <section>
@@ -2279,8 +2279,8 @@ curl --request POST \\
       <section>
         <h2>编辑与变体</h2>
         <ul>
-          <li><code class="inline-code">POST /v1/images/edits</code>：通常使用 multipart/form-data 上传原图与可选蒙版。</li>
-          <li><code class="inline-code">POST /v1/images/variations</code>：通常也是 multipart/form-data，用于基于原图生成变体。</li>
+          <li><code class="inline-code">POST /images/edits</code>：通常使用 multipart/form-data 上传原图与可选蒙版。</li>
+          <li><code class="inline-code">POST /images/variations</code>：通常也是 multipart/form-data，用于基于原图生成变体。</li>
           <li>如果客户端没有内建表单上传，建议先从服务端或脚本方式调用。</li>
         </ul>
         ${callout(
