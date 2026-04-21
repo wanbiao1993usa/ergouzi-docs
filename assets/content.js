@@ -280,12 +280,6 @@ curl --request POST \\
         "Guide",
       )}
 
-      ${callout(
-        "info",
-        "商品名以页面实际显示为准",
-        "你的描述里写的是“openclaw源码”，截图里展示的是“OpenCode源码”。购买时请按页面里实际显示的商品名称下单，本教程的流程本身不变。"
-      )}
-
       <section>
         <h2>购买流程概览</h2>
         <div class="mini-card-grid">
