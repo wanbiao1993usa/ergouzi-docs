@@ -7,6 +7,9 @@ const PURCHASE_WALLET_IMAGE = "./assets/purchase/step1.png";
 const PURCHASE_PRODUCT_IMAGE = "./assets/purchase/step2.png";
 const PURCHASE_CODE_IMAGE = "./assets/purchase/step3.png";
 const PURCHASE_REDEEM_IMAGE = "./assets/purchase/step4.png";
+const TOKEN_CREATE_ENTRY_IMAGE = "./assets/token/step1.png";
+const TOKEN_CREATE_FORM_IMAGE = "./assets/token/step2.png";
+const TOKEN_CREATE_RESULT_IMAGE = "./assets/token/step3.png";
 
 const escapeHtml = (value) =>
   value
@@ -38,7 +41,7 @@ const pageHead = (section, title, lead, badge) => `
 
 export const navSections = [
   { title: "开始", items: ["/"] },
-  { title: "购买教程", items: ["/purchase-guide"] },
+  { title: "账户教程", items: ["/purchase-guide", "/token-guide"] },
   {
     title: "应用集成",
     items: [
@@ -193,6 +196,10 @@ curl --request POST \\
             <strong>购买教程</strong>
             <p>从注册登录、购买兑换码到最终兑换的完整流程说明。</p>
           </a>
+          <a class="link-card" href="#/token-guide">
+            <strong>创建 API Token</strong>
+            <p>从进入控制台、选择令牌分组到最终拿到 Token 的完整流程说明。</p>
+          </a>
         </div>
       </section>
 
@@ -251,19 +258,23 @@ curl --request POST \\
             <strong>购买兑换码</strong>
             <p>如果你需要购买并兑换源码商品，直接看 <a href="#/purchase-guide">购买教程</a> 页面。</p>
           </div>
+          <div class="spot-card">
+            <strong>创建令牌</strong>
+            <p>如果你要开始调用接口，先看 <a href="#/token-guide">创建 API Token</a> 页面，拿到令牌后再接入客户端或 SDK。</p>
+          </div>
         </div>
       </section>
     `,
   },
   {
     path: "/purchase-guide",
-    group: "购买教程",
+    group: "账户教程",
     title: "购买教程",
     summary: "从注册登录、购买兑换码到最终兑换额度的完整购买流程。",
     keywords: ["购买教程", "兑换码", "钱包管理", "openclaw源码", "OpenCode源码"],
     content: `
       ${pageHead(
-        "购买教程",
+        "账户教程",
         "购买教程",
         "这页整理了完整的购买流程：先注册登录，再进入钱包管理购买兑换码，随后在二狗的中转站下单商品，拿到兑换码后再回到钱包页完成兑换。",
         "Guide",
@@ -377,6 +388,107 @@ curl --request POST \\
           <li>兑换码一般区分大小写，复制时不要修改内容。</li>
           <li>如果提示兑换失败，先检查是否复制完整、是否有多余空格、是否重复兑换。</li>
           <li>如果付款成功但没有收到兑换码，回到订单消息或联系商家确认发码状态。</li>
+        </ul>
+      </section>
+    `,
+  },
+  {
+    path: "/token-guide",
+    group: "账户教程",
+    title: "创建 API Token",
+    summary: "从控制台进入令牌管理、选择分组并创建 API Token 的完整流程。",
+    keywords: ["API Token", "令牌管理", "添加令牌", "分组", "倍率", "0.2x", "2折"],
+    content: `
+      ${pageHead(
+        "账户教程",
+        "创建 API Token",
+        "控制台创建 API Token 的操作说明。",
+        "Guide",
+      )}
+
+      ${callout(
+        "warn",
+        "令牌分组决定倍率",
+        "令牌所在的分组会直接决定价格倍率，所以它和价格强相关。截图里的 0.2x 表示任何模型都是官网价格的 0.2 倍，也就是 2 折。"
+      )}
+
+      <section>
+        <h2>创建流程概览</h2>
+        <div class="mini-card-grid">
+          <div class="spot-card">
+            <strong>1. 进入令牌管理</strong>
+            <p>点击控制台，再进入左侧的令牌管理，然后点击“添加令牌”。</p>
+          </div>
+          <div class="spot-card">
+            <strong>2. 填写信息并选分组</strong>
+            <p>填入名称，并选择令牌所在的分组。分组倍率会直接影响价格。</p>
+          </div>
+          <div class="spot-card">
+            <strong>3. 提交并获取令牌</strong>
+            <p>点击提交后，回到令牌管理列表即可看到新建出来的 API Token。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>第一步：点击控制台，然后点击左侧的令牌管理，点击添加令牌</h2>
+        <p>
+          先进入二狗子的控制台页面，然后在左侧导航里找到 <strong>令牌管理</strong>。进入后点击上方的
+          <strong>添加令牌</strong> 按钮，开始创建新的 API Token。
+        </p>
+        <div class="doc-image-wrap">
+          <div class="doc-image-frame">
+            <img class="doc-image" src="${TOKEN_CREATE_ENTRY_IMAGE}" alt="控制台中的令牌管理与添加令牌入口" loading="lazy" />
+          </div>
+          <p class="doc-image-caption">先进入控制台，再到左侧的令牌管理页面，最后点击“添加令牌”。</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>第二步：填入名称，然后选择令牌所在的分组</h2>
+        <p>
+          在创建令牌弹窗里，先填写一个容易识别的名称，然后选择令牌所属分组。这个分组非常重要，因为它直接决定了这个令牌的
+          <strong>倍率</strong>，也就是最终价格。
+        </p>
+        ${callout(
+          "info",
+          "0.2x 的含义",
+          "截图里展示的是 0.2x 倍率，也就是任何模型都按官网价格的 0.2 倍计费，等价于 2 折。选分组时应先确认倍率。"
+        )}
+        <ul>
+          <li>名称建议按用途来命名，比如客户端名、项目名或环境名，后续更容易区分。</li>
+          <li>分组倍率越低，最终价格越便宜；倍率越高，实际消耗越高。</li>
+          <li>如果后续需要给不同项目、不同客户端分开使用，可以创建多个不同名称的令牌。</li>
+        </ul>
+        <div class="doc-image-wrap">
+          <div class="doc-image-frame">
+            <img class="doc-image" src="${TOKEN_CREATE_FORM_IMAGE}" alt="创建令牌时填写名称并选择分组倍率" loading="lazy" />
+          </div>
+          <p class="doc-image-caption">填写名称后，重点确认令牌分组对应的倍率。截图里的 0.2x 就是 2 折。</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>第三步：点击提交则得到令牌</h2>
+        <p>
+          信息填写完成后点击提交，系统就会创建出新的令牌。创建成功后，令牌管理列表中会出现刚创建的记录，并可复制该
+          Token 去接入客户端、SDK 或 API 请求。
+        </p>
+        <div class="doc-image-wrap">
+          <div class="doc-image-frame">
+            <img class="doc-image" src="${TOKEN_CREATE_RESULT_IMAGE}" alt="创建成功后的令牌管理列表" loading="lazy" />
+          </div>
+          <p class="doc-image-caption">提交后回到令牌管理列表，就能看到新创建出来的 Token 和对应分组倍率。</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>常见注意事项</h2>
+        <ul>
+          <li>令牌分组会直接决定倍率，倍率又会直接影响价格，创建前务必先确认清楚。</li>
+          <li>截图中的 0.2x 就是官网价格的 20%，也就是 2 折，不是减去 0.2 或别的含义。</li>
+          <li>名称建议按用途命名，这样后续在多个令牌之间切换时不容易混淆。</li>
+          <li>Token 创建完成后应及时复制保存，后续客户端、SDK 和 API 请求都要用它做鉴权。</li>
         </ul>
       </section>
     `,
