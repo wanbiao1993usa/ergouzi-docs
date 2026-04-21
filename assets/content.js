@@ -259,13 +259,13 @@ curl --request POST \\
     path: "/purchase-guide",
     group: "购买教程",
     title: "购买教程",
-    summary: "从注册登录、购买兑换码到最终兑换额度的完整购买流程，并附带美元汇率与 token 价格换算说明。",
-    keywords: ["购买教程", "兑换码", "钱包管理", "openclaw源码", "OpenCode源码", "汇率", "token价格"],
+    summary: "从注册登录、购买兑换码到最终兑换额度的完整购买流程。",
+    keywords: ["购买教程", "兑换码", "钱包管理", "openclaw源码", "OpenCode源码"],
     content: `
       ${pageHead(
         "购买教程",
         "购买教程",
-        "这页整理了完整的购买流程：先注册登录，再进入钱包管理购买兑换码，随后在二狗的中转站下单商品，拿到兑换码后再回到钱包页完成兑换。另外也补充了美元汇率和官方 token 价格到平台价格的换算方式。",
+        "这页整理了完整的购买流程：先注册登录，再进入钱包管理购买兑换码，随后在二狗的中转站下单商品，拿到兑换码后再回到钱包页完成兑换。",
         "Guide",
       )}
 
@@ -299,62 +299,6 @@ curl --request POST \\
             <p>回到钱包管理页输入兑换码并点击兑换。</p>
           </div>
         </div>
-      </section>
-
-      <section>
-        <h2>汇率与 Token 价格换算</h2>
-        <p>
-          为了方便你估算购买额度和后续消耗，这里统一按 <strong>1 美元 = 7.3 人民币</strong> 计算。只要官方价格是按美元计价，
-          你都可以先按这个汇率折算成人民币。<strong>但 token 单价本身不直接按 7.3 作为倍率计算</strong>，而是要先按我们自己的输入 / 输出倍率换算，再按需做币种换算。
-        </p>
-
-        ${callout(
-          "info",
-          "统一换算规则",
-          "美元转人民币统一按 7.3 计算；官方 token 单价换算到我们平台时，默认按输入倍率 0.88、缓存输入倍率 0.5、输出倍率 0.9 计算。7.3 只用于美元和人民币之间的币种换算。"
-        )}
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>项目</th>
-                <th>换算公式</th>
-                <th>说明</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>美元转人民币</td>
-                <td><code class="inline-code">人民币价格 = 美元价格 × 7.3</code></td>
-                <td>适用于充值预算、模型价格、套餐价格的快速估算。</td>
-              </tr>
-              <tr>
-                <td>官方输入 token 价格 → 我们的输入价格</td>
-                <td><code class="inline-code">我们的输入价格 = 官方输入价格 × 0.88</code></td>
-                <td>token 单位保持不变，比如官方是 <code class="inline-code">USD / 1M tokens</code>，先乘 0.88；如果还要换成人民币，再额外乘 7.3。</td>
-              </tr>
-              <tr>
-                <td>官方缓存输入 token 价格 → 我们的缓存输入价格</td>
-                <td><code class="inline-code">我们的缓存输入价格 = 官方缓存输入价格 × 0.5</code></td>
-                <td>如果官方模型区分 cached input，就按这个倍率换算；如果该模型没有缓存输入价格，这一项可以忽略。</td>
-              </tr>
-              <tr>
-                <td>官方输出 token 价格 → 我们的输出价格</td>
-                <td><code class="inline-code">我们的输出价格 = 官方输出价格 × 0.9</code></td>
-                <td>同样保持原始 token 单位不变，先乘 0.9；如果还要换成人民币，再额外乘 7.3。</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>换算示例</h3>
-        <ul>
-          <li>如果某模型官方输入价格是 <code class="inline-code">$5 / 1M tokens</code>，那么我们的输入价格就是 <code class="inline-code">5 × 0.88 = $4.4 / 1M tokens</code>。</li>
-          <li>如果某模型官方缓存输入价格是 <code class="inline-code">$2 / 1M tokens</code>，那么我们的缓存输入价格就是 <code class="inline-code">2 × 0.5 = $1 / 1M tokens</code>。</li>
-          <li>如果某模型官方输出价格是 <code class="inline-code">$15 / 1M tokens</code>，那么我们的输出价格就是 <code class="inline-code">15 × 0.9 = $13.5 / 1M tokens</code>。</li>
-          <li>如果你还想把上面的结果换成人民币，再继续乘汇率 <code class="inline-code">7.3</code>。例如 <code class="inline-code">$4.4 / 1M tokens × 7.3 = ¥32.12 / 1M tokens</code>。</li>
-        </ul>
       </section>
 
       <section>
@@ -430,9 +374,6 @@ curl --request POST \\
         <h2>常见注意事项</h2>
         <ul>
           <li>商品名称以购买页面实际显示为准，不要只按截图文字死记。</li>
-          <li>价格换算统一按 <code class="inline-code">1 USD = 7.3 RMB</code> 估算，便于快速理解购买额度和消耗成本。</li>
-          <li>官方 token 价格和我们的价格换算时，默认按输入 <code class="inline-code">0.88</code>、缓存输入 <code class="inline-code">0.5</code>、输出 <code class="inline-code">0.9</code> 计算，不是直接乘 7.3。</li>
-          <li>如果还需要显示人民币价格，再在倍率换算结果基础上乘 <code class="inline-code">7.3</code>。</li>
           <li>兑换码一般区分大小写，复制时不要修改内容。</li>
           <li>如果提示兑换失败，先检查是否复制完整、是否有多余空格、是否重复兑换。</li>
           <li>如果付款成功但没有收到兑换码，回到订单消息或联系商家确认发码状态。</li>
