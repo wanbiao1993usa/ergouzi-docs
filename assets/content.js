@@ -881,22 +881,51 @@ claude
       <section>
         <h2>OpenAI Codex CLI</h2>
         <p>
-          Codex CLI 走 OpenAI 风格配置最直接。你可以用环境变量临时切换，也可以后续再把 provider 固化到配置文件里。
+          Codex CLI 这里直接按 <code class="inline-code">~/.codex/config.toml</code> 配置即可。你这套写法的关键点是：
+          默认模型和推理强度写在顶层，<code class="inline-code">model_provider = "ergouzi"</code> 作为开关控制是否走二狗子；
+          如果把这一行注释掉，就会退回 Codex 默认 provider。
         </p>
         ${code(
           "bash",
           `
 npm install -g @openai/codex
 
-export OPENAI_API_KEY="your_api_key_here"
-export OPENAI_BASE_URL="https://ergouzi.life"
-export OPENAI_MODEL="gpt-5.4-mini"
+mkdir -p ~/.codex
+
+cat > ~/.codex/config.toml <<'EOF'
+# 默认使用的模型
+model = "gpt-5.3-codex"
+# 默认推理程度
+model_reasoning_effort = "xhigh"
+
+# 默认使用的 provider 为二狗子，如果将下一行注释掉则使用 codex，所以此处是开关
+model_provider = "ergouzi"
+
+# 二狗子的配置
+[model_providers.ergouzi]
+name = "ergouzi"
+base_url = "https://ergouzi.life/v1"
+env_key = "ERGOUZI_API_KEY"
+wire_api = "responses"
+EOF
+
+export ERGOUZI_API_KEY="API_token_xxxxxxxxxxx"
 
 codex
           `,
         )}
+        ${callout(
+          "info",
+          "Codex 这里按你这套格式接",
+          `这里保持 <code class="inline-code">base_url = "https://ergouzi.life/v1"</code>，并使用
+          <code class="inline-code">wire_api = "responses"</code>。如果你注释掉 <code class="inline-code">model_provider = "ergouzi"</code>，
+          就会回到 Codex 默认 provider。`
+        )}
         <p>
-          启动后如果你想切模型，可以直接在 Codex 里执行 <code class="inline-code">/model</code>。如果你的网关只支持 Chat Completions 而不是 Responses，再考虑改成自定义 provider 配置。
+          配完后再设置环境变量 <code class="inline-code">ERGOUZI_API_KEY</code>，然后直接运行 <code class="inline-code">codex</code>。
+          如果你后续要切模型或调整推理强度，直接改 <code class="inline-code">~/.codex/config.toml</code> 里的
+          <code class="inline-code">model</code> 和 <code class="inline-code">model_reasoning_effort</code> 即可；也可以在 Codex
+          内部直接通过 <code class="inline-code">/model</code> 进行切换。
         </p>
       </section>
 
