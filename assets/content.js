@@ -10,6 +10,7 @@ const PURCHASE_REDEEM_IMAGE = "./assets/purchase/step4.png";
 const TOKEN_CREATE_ENTRY_IMAGE = "./assets/token/step1.png";
 const TOKEN_CREATE_FORM_IMAGE = "./assets/token/step2.png";
 const TOKEN_CREATE_RESULT_IMAGE = "./assets/token/step3.png";
+const CODEX_CONFIG_IMAGE = "./assets/codex/config.png";
 
 const escapeHtml = (value) =>
   value
@@ -1027,6 +1028,12 @@ codex
           <code class="inline-code">wire_api = "responses"</code>。如果你注释掉 <code class="inline-code">model_provider = "ergouzi"</code>，
           就会回到 Codex 默认 provider。`
         )}
+        <div class="doc-image-wrap">
+          <div class="doc-image-frame">
+            <img class="doc-image" src="${CODEX_CONFIG_IMAGE}" alt="Codex CLI 的 config.toml 与 ERGOUZI_API_KEY 环境变量配置示意图" loading="lazy" />
+          </div>
+          <p class="doc-image-caption">Windows 系统配置示意图：在 <code class="inline-code">.codex/config.toml</code> 中写入 provider 配置，并设置 <code class="inline-code">ERGOUZI_API_KEY</code> 环境变量。</p>
+        </div>
         <p>
           配完后再设置环境变量 <code class="inline-code">ERGOUZI_API_KEY</code>，然后直接运行 <code class="inline-code">codex</code>。
           如果你后续要切模型或调整推理强度，直接改 <code class="inline-code">~/.codex/config.toml</code> 里的
