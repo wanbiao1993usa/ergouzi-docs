@@ -1,4 +1,4 @@
-import { navSections, pages } from "./content.js?v=20260422-12";
+import { navSections, pages } from "./content.js?v=20260424-2";
 
 const pageMap = new Map(pages.map((page) => [page.path, page]));
 

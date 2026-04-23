@@ -7,6 +7,7 @@ const PURCHASE_WALLET_IMAGE = "./assets/purchase/step1.png";
 const PURCHASE_PRODUCT_IMAGE = "./assets/purchase/step2.png";
 const PURCHASE_CODE_IMAGE = "./assets/purchase/step3.png";
 const PURCHASE_REDEEM_IMAGE = "./assets/purchase/step4.png";
+const SUBSCRIPTION_PURCHASE_IMAGE = "./assets/purchase/subscription-step1.png";
 const TOKEN_CREATE_ENTRY_IMAGE = "./assets/token/step1.png";
 const TOKEN_CREATE_FORM_IMAGE = "./assets/token/step2.png";
 const TOKEN_CREATE_RESULT_IMAGE = "./assets/token/step3.png";
@@ -42,7 +43,7 @@ const pageHead = (section, title, lead, badge) => `
 
 export const navSections = [
   { title: "开始", items: ["/"] },
-  { title: "账户教程", items: ["/purchase-guide", "/token-guide"] },
+  { title: "账户教程", items: ["/purchase-guide", "/subscription-guide", "/token-guide"] },
   {
     title: "应用集成",
     items: [
@@ -194,8 +195,12 @@ curl --request POST \\
             <p>直接复制 curl、Node.js、Python 示例进行联调。</p>
           </a>
           <a class="link-card" href="#/purchase-guide">
-            <strong>购买教程</strong>
-            <p>从注册登录、购买兑换码到最终兑换的完整流程说明。</p>
+            <strong>购买普通兑换码</strong>
+            <p>从注册登录、购买兑换码到最终兑换额度的完整流程说明。</p>
+          </a>
+          <a class="link-card" href="#/subscription-guide">
+            <strong>购买无限订阅</strong>
+            <p>从注册登录、购买无限流量套餐到联系客服手动开通订阅的流程说明。</p>
           </a>
           <a class="link-card" href="#/token-guide">
             <strong>创建 API Token</strong>
@@ -256,8 +261,12 @@ curl --request POST \\
             <p>按你用的官方库选择 <a href="#/sdk/openai">OpenAI</a>、<a href="#/sdk/claude">Claude</a> 或 <a href="#/sdk/gemini">Gemini</a> 页面。</p>
           </div>
           <div class="spot-card">
-            <strong>购买兑换码</strong>
-            <p>如果你需要购买并兑换源码商品，直接看 <a href="#/purchase-guide">购买教程</a> 页面。</p>
+            <strong>购买普通兑换码</strong>
+            <p>如果你需要购买并兑换源码商品，直接看 <a href="#/purchase-guide">购买普通兑换码</a> 页面。</p>
+          </div>
+          <div class="spot-card">
+            <strong>购买无限订阅</strong>
+            <p>如果你需要无限流量套餐，直接看 <a href="#/subscription-guide">购买无限订阅</a> 页面。</p>
           </div>
           <div class="spot-card">
             <strong>创建令牌</strong>
@@ -270,15 +279,21 @@ curl --request POST \\
   {
     path: "/purchase-guide",
     group: "账户教程",
-    title: "购买教程",
-    summary: "从注册登录、购买兑换码到最终兑换额度的完整购买流程。",
-    keywords: ["购买教程", "兑换码", "钱包管理", "openclaw源码", "OpenCode源码"],
+    title: "购买普通兑换码",
+    summary: "从注册登录、购买兑换码到最终兑换额度的完整流程。",
+    keywords: ["购买教程", "购买普通兑换码", "兑换码", "钱包管理", "openclaw源码", "OpenCode源码"],
     content: `
       ${pageHead(
         "账户教程",
-        "购买教程",
-        "这页整理了完整的购买流程：先注册登录，再进入钱包管理购买兑换码，随后在二狗的中转站下单商品，拿到兑换码后再回到钱包页完成兑换。",
+        "购买普通兑换码",
+        "这页只介绍普通兑换码的购买与兑换流程：先注册登录，再进入钱包管理购买兑换码，随后在二狗的中转站下单商品，拿到兑换码后再回到钱包页完成兑换。",
         "Guide",
+      )}
+
+      ${callout(
+        "info",
+        "如果你要买无限流量套餐",
+        '订阅套餐是另一条流程，请直接查看 <a href="#/subscription-guide">购买无限订阅</a> 页面。'
       )}
 
       <section>
@@ -383,6 +398,90 @@ curl --request POST \\
           <li>兑换码一般区分大小写，复制时不要修改内容。</li>
           <li>如果提示兑换失败，先检查是否复制完整、是否有多余空格、是否重复兑换。</li>
           <li>如果付款成功但没有收到兑换码，回到订单消息或联系商家确认发码状态。</li>
+        </ul>
+      </section>
+    `,
+  },
+  {
+    path: "/subscription-guide",
+    group: "账户教程",
+    title: "购买无限订阅",
+    summary: "从注册登录、购买无限流量套餐到联系客服手动开通无限订阅的完整流程。",
+    keywords: ["购买教程", "购买订阅", "购买无限订阅", "订阅套餐", "无限流量套餐", "客服开通", "用户名"],
+    content: `
+      ${pageHead(
+        "账户教程",
+        "购买无限订阅",
+        "这页只介绍无限流量订阅套餐的购买方式：先注册登录，再进入账户充值页购买无限流量套餐，最后把用户名发给客服手动开通。",
+        "Guide",
+      )}
+
+      ${callout(
+        "warn",
+        "订阅需要人工开通",
+        "购买完成后，还需要把当前登录账号的用户名发送给客服，由客服手动修改并增加订阅。"
+      )}
+
+      <section>
+        <h2>购买流程概览</h2>
+        <div class="mini-card-grid">
+          <div class="spot-card">
+            <strong>1. 注册并登录</strong>
+            <p>先完成账号注册，然后登录到二狗控制台。</p>
+          </div>
+          <div class="spot-card">
+            <strong>2. 购买无限流量套餐</strong>
+            <p>进入账户充值页，点击“购买无限流量套餐”。</p>
+          </div>
+          <div class="spot-card">
+            <strong>3. 把用户名发给客服</strong>
+            <p>将当前账号用户名发送给客服，由客服手动修改并增加订阅。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>第一步：注册账号并登录</h2>
+        <p>
+          先完成账号注册，然后登录到二狗平台。只有在登录状态下，你才能进入账户充值页面并完成后续订阅开通流程。
+        </p>
+        <ul>
+          <li>如果你还没有账号，先走注册流程创建一个新账号。</li>
+          <li>如果已经有账号，直接登录即可。</li>
+          <li>登录成功后，再继续进入账户充值页面。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>第二步：点击购买无限流量套餐</h2>
+        <p>
+          登录后进入账户充值页面，点击 <strong>购买无限流量套餐</strong> 按钮进入购买流程。
+        </p>
+        <div class="doc-image-wrap">
+          <div class="doc-image-frame">
+            <img class="doc-image" src="${SUBSCRIPTION_PURCHASE_IMAGE}" alt="账户充值页中的购买无限流量套餐入口" loading="lazy" />
+          </div>
+          <p class="doc-image-caption">在账户充值页面点击“购买无限流量套餐”。</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>第三步：将用户名发送给客服，需要客服手动修改并增加订阅</h2>
+        <p>
+          购买完成后，把你当前登录账号的 <strong>用户名</strong> 发送给客服。客服会按这个用户名手动修改账号并增加订阅，处理完成后订阅才会生效。
+        </p>
+        <ul>
+          <li>发送的是用户名，不是密码，也不是 API Token。</li>
+          <li>一定要发送当前购买所用账号的用户名，避免订阅加到错误账号上。</li>
+          <li>客服处理完成后，再回到账户页面确认订阅状态是否已经更新。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>常见注意事项</h2>
+        <ul>
+          <li>如果你只想按额度充值，请改看 <a href="#/purchase-guide">购买普通兑换码</a> 页面。</li>
+          <li>如果已经付款但订阅没有生效，先确认用户名是否已经发给客服，以及发送的账号是否正确。</li>
         </ul>
       </section>
     `,
@@ -988,10 +1087,13 @@ claude
       <section>
         <h2>OpenAI Codex CLI</h2>
         <p>
-          Codex CLI 这里直接按 <code class="inline-code">~/.codex/config.toml</code> 配置即可。你这套写法的关键点是：
-          默认模型和推理强度写在顶层，<code class="inline-code">model_provider = "ergouzi"</code> 作为开关控制是否走二狗子；
-          如果把这一行注释掉，就会退回 Codex 默认 provider。
+          按下面 3 步配置即可：
         </p>
+        <ul>
+          <li>安装 <code class="inline-code">@openai/codex</code>。</li>
+          <li>写入 <code class="inline-code">~/.codex/config.toml</code>。</li>
+          <li>设置 <code class="inline-code">ERGOUZI_API_KEY</code> 后运行 <code class="inline-code">codex</code>。</li>
+        </ul>
         ${code(
           "bash",
           `
@@ -1023,10 +1125,8 @@ codex
         )}
         ${callout(
           "info",
-          "Codex 这里按你这套格式接",
-          `这里保持 <code class="inline-code">base_url = "https://ergouzi.life/v1"</code>，并使用
-          <code class="inline-code">wire_api = "responses"</code>。如果你注释掉 <code class="inline-code">model_provider = "ergouzi"</code>，
-          就会回到 Codex 默认 provider。`
+          "关键说明",
+          `<code class="inline-code">model_provider = "ergouzi"</code> 是开关；注释掉这一行会回到 Codex 默认 provider。这里保持 <code class="inline-code">base_url = "https://ergouzi.life/v1"</code>，并使用 <code class="inline-code">wire_api = "responses"</code>。`
         )}
         <div class="doc-image-wrap">
           <div class="doc-image-frame">
@@ -1034,12 +1134,10 @@ codex
           </div>
           <p class="doc-image-caption">Windows 系统配置示意图：在 <code class="inline-code">.codex/config.toml</code> 中写入 provider 配置，并设置 <code class="inline-code">ERGOUZI_API_KEY</code> 环境变量。</p>
         </div>
-        <p>
-          配完后再设置环境变量 <code class="inline-code">ERGOUZI_API_KEY</code>，然后直接运行 <code class="inline-code">codex</code>。
-          如果你后续要切模型或调整推理强度，直接改 <code class="inline-code">~/.codex/config.toml</code> 里的
-          <code class="inline-code">model</code> 和 <code class="inline-code">model_reasoning_effort</code> 即可；也可以在 Codex
-          内部直接通过 <code class="inline-code">/model</code> 进行切换。
-        </p>
+        <ul>
+          <li>切模型或推理强度：修改 <code class="inline-code">model</code> 和 <code class="inline-code">model_reasoning_effort</code>。</li>
+          <li>临时切模型：在 Codex 内部执行 <code class="inline-code">/model</code>。</li>
+        </ul>
       </section>
 
       <section>
