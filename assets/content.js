@@ -22,6 +22,10 @@ const CHERRY_MODEL_LIST_IMAGE = "./assets/cherry-studio/model-list-result.webp";
 const CHERRY_HOME_MODEL_IMAGE = "./assets/cherry-studio/home-model-selected.webp";
 const CHERRY_MODEL_SWITCHER_IMAGE = "./assets/cherry-studio/model-switcher.webp";
 const CHERRY_CHAT_TEST_IMAGE = "./assets/cherry-studio/chat-test-success.webp";
+const TRAE_SETTINGS_ENTRY_IMAGE = "./assets/trae-cn/open-settings.webp";
+const TRAE_MODEL_MANAGEMENT_IMAGE = "./assets/trae-cn/model-management.webp";
+const TRAE_ADD_MODEL_IMAGE = "./assets/trae-cn/add-model-dialog.webp";
+const TRAE_CHAT_COMPLETIONS_URL = `${API_HOST}/v1/chat/completions`;
 
 const escapeHtml = (value) =>
   value
@@ -51,10 +55,10 @@ const pageHead = (section, title, lead, badge) => `
   </div>
 `;
 
-const docImage = (src, alt, caption) => `
+const docImage = (src, alt, caption, width = 1440, height = 1203) => `
   <div class="doc-image-wrap">
     <div class="doc-image-frame">
-      <img class="doc-image" src="${src}" alt="${alt}" width="1440" height="1203" loading="lazy" decoding="async" />
+      <img class="doc-image" src="${src}" alt="${alt}" width="${width}" height="${height}" loading="lazy" decoding="async" />
     </div>
     <p class="doc-image-caption">${caption}</p>
   </div>
@@ -72,6 +76,7 @@ export const navSections = [
     items: [
       "/apps",
       "/apps/cherry-studio",
+      "/apps/trae-cn",
       "/apps/chat-clients",
       "/apps/editor-tools",
       "/apps/cli-tools",
@@ -744,6 +749,7 @@ curl --request POST \\
       "2折组",
       "0.7折分组",
       "Trae",
+      "Trae CN",
       "Trae-Proxy",
       "Claude Code",
       "VS Code 插件",
@@ -777,11 +783,14 @@ curl --request POST \\
       <section>
         <h2>2. 国产 Trae 是否支持自定义接入</h2>
         <p>
-          目前 Trae 不支持直接自定义 Base URL 和模型，所以不能像 Cherry Studio、Claude Code 这类工具一样直接填写二狗子的地址和模型名。
+          新版 Trae CN 可以在设置里的“模型”页面添加自定义模型。它不是填写普通 Base URL，而是在添加模型弹窗里填写完整的
+          <code class="inline-code">/v1/chat/completions</code> 请求地址。
         </p>
-        <p>
-          如果要在 Trae 里使用，需要通过第三方中转来适配。可以使用 <strong>Trae-Proxy</strong> 这类代理方案，把 Trae 的请求转发到自定义接口。
-        </p>
+        ${callout(
+          "info",
+          "查看单独教程",
+          '具体字段和截图步骤已经拆到 <a href="#/apps/trae-cn">Trae CN 配置</a> 页面。旧版本如果没有“自定义请求地址”字段，再考虑升级 Trae CN 或使用 Trae-Proxy 这类代理方案。'
+        )}
       </section>
 
       <section>
@@ -846,7 +855,7 @@ claude
       ${callout(
         "info",
         "先分清字段类型",
-        "如果应用字段叫 API Host / 站点地址 / 域名，通常填写根域名；如果字段叫 Base URL / apiBase / Endpoint，这里也统一填写根域名。"
+        `如果应用字段叫 API Host / 站点地址 / 域名，通常填写根域名；如果字段叫 Base URL / apiBase / Endpoint，这里也统一填写根域名。Trae CN 的“自定义请求地址”是例外，要填写完整的 <code class="inline-code">${TRAE_CHAT_COMPLETIONS_URL}</code>。`
       )}
 
       <section>
@@ -872,6 +881,11 @@ claude
                 <td>Lobe Chat、Chatbox、Continue、多数桌面客户端与 IDE 插件。</td>
               </tr>
               <tr>
+                <td>Trae CN 自定义请求地址</td>
+                <td><code class="inline-code">${TRAE_CHAT_COMPLETIONS_URL}</code></td>
+                <td>Trae CN 添加自定义模型弹窗里的“自定义请求地址”。</td>
+              </tr>
+              <tr>
                 <td>Claude 原生 Base URL</td>
                 <td><code class="inline-code">${CLAUDE_BASE}</code></td>
                 <td>Claude Code 等 Anthropic 风格客户端。</td>
@@ -892,6 +906,10 @@ claude
           <a class="link-card" href="#/apps/cherry-studio">
             <strong>Cherry Studio</strong>
             <p>单独页面，覆盖提供商添加、模型切换和绘图配置。</p>
+          </a>
+          <a class="link-card" href="#/apps/trae-cn">
+            <strong>Trae CN</strong>
+            <p>单独页面，覆盖 SOLO Coder 中添加自定义模型和填写请求地址。</p>
           </a>
           <a class="link-card" href="#/apps/chat-clients">
             <strong>聊天客户端</strong>
@@ -931,8 +949,8 @@ claude
               </tr>
               <tr>
                 <td>编辑器插件</td>
-                <td>Cursor、Continue</td>
-                <td>优先走 OpenAI 兼容，Cursor 用 Claude 时注意模型别名。</td>
+                <td>Trae CN、Cursor、Continue</td>
+                <td>Trae CN 使用完整 Chat Completions 请求地址；Cursor / Continue 优先走 OpenAI 兼容。</td>
               </tr>
               <tr>
                 <td>CLI 工具</td>
@@ -1842,6 +1860,161 @@ gemini
           <li>普通聊天没有回复：先切换到文本模型，例如 gpt-5.4，不要用 gpt-image-2 做普通对话测试。</li>
           <li>对话正常但无法画图：确认已经把 gpt-image-2 这类图片模型添加到 ergouzi 提供商，并在图片功能里选择它。</li>
           <li>请求报 401 / 403：通常是 API Key 无效、被禁用，或者当前分组没有该模型权限。</li>
+        </ul>
+      </section>
+    `,
+  },
+  {
+    path: "/apps/trae-cn",
+    group: "应用集成",
+    title: "Trae CN 配置",
+    summary: "Trae CN / SOLO Coder 中添加 Ergouzi 自定义模型、填写 API Key 与请求地址的完整流程。",
+    keywords: ["Trae", "Trae CN", "SOLO Coder", "自定义模型", "模型管理", "OpenRouter", "编码助手"],
+    content: `
+      ${pageHead(
+        "应用集成",
+        "Trae CN 配置",
+        "这页按 Trae CN 的 SOLO Coder 界面整理：进入设置，打开模型管理，添加自定义模型，填写模型 ID、二狗子 API Key 和完整请求地址，最后启用模型。",
+        "IDE",
+      )}
+
+      ${callout(
+        "warn",
+        "这里填写的是完整请求地址",
+        `Trae CN 的字段名是“自定义请求地址”，不要只填根域名。这里填写 <code class="inline-code">${TRAE_CHAT_COMPLETIONS_URL}</code>。`
+      )}
+
+      <section>
+        <h2>参数填写</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>字段</th>
+                <th>填写方式</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>服务商</td>
+                <td>OpenRouter</td>
+                <td>按截图选择 OpenRouter 作为服务商入口，实际请求会被“自定义请求地址”指向二狗子。</td>
+              </tr>
+              <tr>
+                <td>模型</td>
+                <td>自定义模型</td>
+                <td>不要选择内置模型，选择可以手动填写模型 ID 的自定义模型。</td>
+              </tr>
+              <tr>
+                <td>模型 ID</td>
+                <td>你要使用的模型名，例如 <code class="inline-code">gpt-5.5</code> 或 <code class="inline-code">gpt-5.4</code></td>
+                <td>必须是你的二狗子账号当前分组可用的模型。</td>
+              </tr>
+              <tr>
+                <td>API 密钥</td>
+                <td>你在二狗子控制台生成的 API Token</td>
+                <td>粘贴完整 Token，不要多复制空格。</td>
+              </tr>
+              <tr>
+                <td>自定义请求地址</td>
+                <td><code class="inline-code">${TRAE_CHAT_COMPLETIONS_URL}</code></td>
+                <td>这是完整 Chat Completions 地址，不是普通 Base URL。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>流程概览</h2>
+        <div class="step-grid">
+          <div class="step-card">
+            <span class="step-number">1</span>
+            <strong>打开设置</strong>
+            <p>在 Trae CN 顶部工具栏找到齿轮配置按钮，点击进入设置页。</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">2</span>
+            <strong>进入模型管理</strong>
+            <p>在设置页左侧选择“模型”，然后点击“添加模型”。</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">3</span>
+            <strong>填写自定义模型</strong>
+            <p>服务商选 OpenRouter，模型选自定义模型，填入模型 ID、API 密钥和请求地址。</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">4</span>
+            <strong>启用并测试</strong>
+            <p>添加成功后确认模型出现在自定义列表，并保持右侧开关开启。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>第一步：打开配置按钮</h2>
+        <p>
+          打开 Trae CN 后，在顶部工具栏找到齿轮图标，点击进入设置页面。
+        </p>
+        ${docImage(
+          TRAE_SETTINGS_ENTRY_IMAGE,
+          "Trae CN 顶部工具栏中的配置按钮",
+          "在 Trae CN 顶部点击齿轮配置按钮。",
+          1440,
+          900
+        )}
+      </section>
+
+      <section>
+        <h2>第二步：进入模型管理并添加模型</h2>
+        <p>
+          进入设置页后，左侧点击 <strong>模型</strong>。右侧会出现模型管理列表，点击上方的 <strong>添加模型</strong>。
+        </p>
+        ${docImage(
+          TRAE_MODEL_MANAGEMENT_IMAGE,
+          "Trae CN 设置页中的模型管理和添加模型按钮",
+          "在“模型”页面点击“添加模型”。",
+          1440,
+          900
+        )}
+      </section>
+
+      <section>
+        <h2>第三步：填写模型 ID、密钥和请求地址</h2>
+        <p>
+          在“添加模型”弹窗中按下面方式填写。截图里示例模型是 <code class="inline-code">gpt-5.5</code>，你也可以换成模型广场里当前分组支持的其他模型。
+        </p>
+        <ul>
+          <li><strong>服务商</strong>：选择 <code class="inline-code">OpenRouter</code>。</li>
+          <li><strong>模型</strong>：选择 <code class="inline-code">自定义模型</code>。</li>
+          <li><strong>模型 ID</strong>：填写你想用的模型名，例如 <code class="inline-code">gpt-5.5</code>。</li>
+          <li><strong>API 密钥</strong>：填写二狗子 API Token。</li>
+          <li><strong>自定义请求地址</strong>：填写 <code class="inline-code">${TRAE_CHAT_COMPLETIONS_URL}</code>。</li>
+        </ul>
+        ${docImage(
+          TRAE_ADD_MODEL_IMAGE,
+          "Trae CN 添加模型弹窗中的模型 ID、API 密钥和自定义请求地址",
+          "模型 ID 填模型名，API 密钥填二狗子 Token，自定义请求地址填完整 Chat Completions 地址。",
+          1440,
+          900
+        )}
+      </section>
+
+      <section>
+        <h2>第四步：确认模型启用</h2>
+        <p>
+          点击 <strong>添加模型</strong> 后，回到模型管理页。确认新模型出现在“自定义”分组下，并且右侧开关处于开启状态。随后回到 SOLO Coder 对话区选择该模型测试即可。
+        </p>
+      </section>
+
+      <section>
+        <h2>排查建议</h2>
+        <ul>
+          <li>模型添加失败：先确认“自定义请求地址”填写的是 <code class="inline-code">${TRAE_CHAT_COMPLETIONS_URL}</code>，不是 <code class="inline-code">${API_HOST}</code>。</li>
+          <li>请求报 401 / 403：通常是 API Token 无效、复制不完整，或者当前分组没有该模型权限。</li>
+          <li>模型名报错：去模型广场确认当前分组是否支持该模型，再把模型 ID 改成可用模型名。</li>
+          <li>设置页没有“自定义请求地址”：说明 Trae CN 版本或入口不同，优先升级客户端；旧版本再考虑 Trae-Proxy 这类代理方案。</li>
         </ul>
       </section>
     `,
