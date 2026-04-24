@@ -13,6 +13,15 @@ const TOKEN_CREATE_FORM_IMAGE = "./assets/token/step2.png";
 const TOKEN_CREATE_RESULT_IMAGE = "./assets/token/step3.png";
 const CODEX_CONFIG_IMAGE = "./assets/codex/config.png";
 const FAQ_CLAUDE_CODE_OPENAI_IMAGE = "./assets/faq/claude-code-openai-model.png";
+const CHERRY_AGENT_SETTINGS_IMAGE = "./assets/cherry-studio/agent-settings-entry.png";
+const CHERRY_ADD_ENTRY_IMAGE = "./assets/cherry-studio/api-server-add-entry.png";
+const CHERRY_ADD_PROVIDER_IMAGE = "./assets/cherry-studio/add-provider-dialog.png";
+const CHERRY_PROVIDER_CONFIG_IMAGE = "./assets/cherry-studio/provider-config.png";
+const CHERRY_MODEL_PICKER_IMAGE = "./assets/cherry-studio/model-picker-add.png";
+const CHERRY_MODEL_LIST_IMAGE = "./assets/cherry-studio/model-list-result.png";
+const CHERRY_HOME_MODEL_IMAGE = "./assets/cherry-studio/home-model-selected.png";
+const CHERRY_MODEL_SWITCHER_IMAGE = "./assets/cherry-studio/model-switcher.png";
+const CHERRY_CHAT_TEST_IMAGE = "./assets/cherry-studio/chat-test-success.png";
 
 const escapeHtml = (value) =>
   value
@@ -39,6 +48,15 @@ const pageHead = (section, title, lead, badge) => `
       ${badge ? `<span class="page-badge">${badge}</span>` : ""}
     </div>
     <p class="lead">${lead}</p>
+  </div>
+`;
+
+const docImage = (src, alt, caption) => `
+  <div class="doc-image-wrap">
+    <div class="doc-image-frame">
+      <img class="doc-image" src="${src}" alt="${alt}" loading="lazy" />
+    </div>
+    <p class="doc-image-caption">${caption}</p>
   </div>
 `;
 
@@ -1619,20 +1637,20 @@ gemini
     path: "/apps/cherry-studio",
     group: "应用集成",
     title: "Cherry Studio 集成",
-    summary: "Cherry Studio 的接入参数、一键导入配置、切换模型与绘图流程。",
-    keywords: ["Cherry Studio", "应用集成", "客户端", "桌面 AI", "绘图"],
+    summary: "Cherry Studio 中添加 Ergouzi 提供商、填写 Key 和地址、拉取模型并完成对话测试的完整流程。",
+    keywords: ["Cherry Studio", "应用集成", "客户端", "桌面 AI", "模型服务", "API 服务器", "绘图"],
     content: `
       ${pageHead(
         "应用集成",
         "Cherry Studio 集成",
-        "Cherry Studio 是一款桌面 AI 客户端，接入时只需要准备 API Key、站点地址和可用模型。这个页面把接入步骤整理成纯文字版流程，直接照着填就能用。",
+        "这页按照 Cherry Studio 实际界面整理：从智能体页进入设置，新增 Ergouzi 提供商，填写 API Key 和接口地址，拉取模型列表，最后回到首页切换模型并发送测试消息。",
         "App",
       )}
 
       ${callout(
         "info",
-        "可选的一键导入配置",
-        '如果你维护的是兼容 NewAPI / UniAPI 控制台的一键填充能力，可以在聊天设置里加入这个快捷项：{ "Cherry Studio": "cherrystudio://providers/api-keys?v=1&data={cherryConfig}" }。'
+        "先准备 API Key",
+        '开始前先在二狗控制台创建或复制一枚 API Token。如果还没有 Key，先看 <a href="#/token-guide">创建 API Token</a> 页面。'
       )}
 
       <section>
@@ -1649,93 +1667,179 @@ gemini
             <tbody>
               <tr>
                 <td>提供商类型</td>
-                <td>选择兼容 OpenAI / 自定义 OpenAI 的类型</td>
-                <td>Cherry Studio 侧通常按 OpenAI 兼容方式接入最稳妥。</td>
+                <td>OpenAI</td>
+                <td>添加提供商弹窗里把“提供商类型”选为 OpenAI。</td>
+              </tr>
+              <tr>
+                <td>提供商名称</td>
+                <td>ergouzi</td>
+                <td>名称可以自定义，教程里统一写 ergouzi，方便后面在模型选择器里识别。</td>
               </tr>
               <tr>
                 <td>API 密钥</td>
-                <td>你在 Ergouzi 后台生成的 API Key</td>
-                <td>用于调用文本、图片和音频等模型能力。</td>
+                <td>你在二狗控制台生成的 API Token</td>
+                <td>粘贴完整 Key，不要多复制空格。</td>
               </tr>
               <tr>
                 <td>API 地址</td>
                 <td><code class="inline-code">${API_HOST}</code></td>
-                <td>如果客户端要求填 Base URL，也统一填写根地址 <code class="inline-code">${OPENAI_BASE}</code>。</td>
+                <td>Cherry Studio 会预览为 <code class="inline-code">${API_HOST}/v1/chat/completions</code>，这是正常的。</td>
               </tr>
             </tbody>
           </table>
         </div>
         ${callout(
           "warn",
-          "地址怎么填看客户端字段名",
-          "如果字段叫“站点地址 / API Host / 域名”，填根域名；如果字段叫“Base URL”，这里也统一填根域名。"
+          "只填根地址",
+          `API 地址填写 <code class="inline-code">${API_HOST}</code> 即可，不要手动追加 <code class="inline-code">/v1</code> 或 <code class="inline-code">/chat/completions</code>。`
         )}
       </section>
 
       <section>
-        <h2>接入步骤</h2>
+        <h2>流程概览</h2>
         <div class="step-grid">
           <div class="step-card">
             <span class="step-number">1</span>
-            <strong>复制 API Key</strong>
-            <p>先在你的控制台生成或复制一枚可用的 API Key，后面新增提供商时直接粘贴进去。</p>
+            <strong>进入设置</strong>
+            <p>在智能体页看到提示时，点击“前往设置”。也可以直接点右上角齿轮进入设置。</p>
           </div>
           <div class="step-card">
             <span class="step-number">2</span>
             <strong>添加提供商</strong>
-            <p>在 Cherry Studio 里新增一个兼容 OpenAI 的提供商，名称可以自定义为 Ergouzi API。</p>
+            <p>在“模型服务”页点击底部“添加”，名称填写 ergouzi，类型选择 OpenAI。</p>
           </div>
           <div class="step-card">
             <span class="step-number">3</span>
-            <strong>填写地址与模型</strong>
-            <p>把地址改成 Ergouzi 的接口地址，并补充你希望使用的文本模型、视觉模型或绘图模型。</p>
+            <strong>填写 Key 和地址</strong>
+            <p>API 密钥粘贴你的二狗 API Token，API 地址填写 ${API_HOST}。</p>
           </div>
           <div class="step-card">
             <span class="step-number">4</span>
-            <strong>返回聊天页</strong>
-            <p>保存后回到聊天页面，打开模型选择器，确认新建的提供商已经出现在模型来源列表中。</p>
+            <strong>拉取并添加模型</strong>
+            <p>点击“获取模型列表”，在弹窗里点模型右侧的“+”加入要使用的模型。</p>
           </div>
           <div class="step-card">
             <span class="step-number">5</span>
-            <strong>切换到 Ergouzi 模型</strong>
-            <p>选中刚刚添加的模型后就可以开始对话。如果响应正常，说明集成完成。</p>
+            <strong>回到首页切换模型</strong>
+            <p>在顶部模型选择器里找到 ergouzi 分组，选择文本模型，例如 gpt-5.4。</p>
           </div>
           <div class="step-card">
             <span class="step-number">6</span>
-            <strong>检查模型可用性</strong>
-            <p>如果模型列表为空，通常是地址写错、Key 无权限，或者当前账户下没有给该分组开放对应模型。</p>
+            <strong>发送消息测试</strong>
+            <p>发一句简单消息，能正常回复就说明 Cherry Studio 已接入成功。</p>
           </div>
         </div>
       </section>
 
       <section>
-        <h2>在 Cherry Studio 中画图</h2>
+        <h2>第一步：进入设置</h2>
         <p>
-          要使用绘图能力，核心不是切换协议，而是确保你添加了支持图像生成的模型，并且当前提供商启用了对应模型列表。
+          打开 Cherry Studio 后，如果在智能体页看到“请启用 API 服务器以使用智能体功能”的提示，点击 <strong>前往设置</strong>。如果没有这条提示，也可以点击右上角齿轮进入设置。
         </p>
-        <div class="mini-card-grid">
-          <div class="spot-card">
-            <strong>先补充图片模型</strong>
-            <p>例如给当前提供商添加一个可用的图像模型，然后刷新 Cherry Studio 的模型列表。</p>
-          </div>
-          <div class="spot-card">
-            <strong>在绘图页选择模型</strong>
-            <p>切换到图片或绘图功能页，确认已选中你刚刚添加的图像模型。</p>
-          </div>
-          <div class="spot-card">
-            <strong>提交提示词测试</strong>
-            <p>先用一句简单提示词验证联通性，再逐步加入风格、尺寸和质量等参数。</p>
-          </div>
-        </div>
+        ${docImage(
+          CHERRY_AGENT_SETTINGS_IMAGE,
+          "Cherry Studio 智能体页中的前往设置按钮",
+          "在智能体页点击“前往设置”，进入模型服务相关配置。"
+        )}
+      </section>
+
+      <section>
+        <h2>第二步：添加 Ergouzi 提供商</h2>
+        <p>
+          进入设置后，左侧选择 <strong>模型服务</strong>。在中间的模型平台列表底部点击 <strong>添加</strong>，开始新建一个提供商。
+        </p>
+        ${docImage(
+          CHERRY_ADD_ENTRY_IMAGE,
+          "Cherry Studio 模型服务页底部的添加按钮",
+          "在模型服务列表底部点击“添加”。"
+        )}
+        <p>
+          在“添加提供商”弹窗里，提供商名称填写 <strong>ergouzi</strong>，提供商类型选择 <strong>OpenAI</strong>，然后点击 <strong>确定</strong>。
+        </p>
+        ${docImage(
+          CHERRY_ADD_PROVIDER_IMAGE,
+          "Cherry Studio 添加提供商弹窗，名称填写 ergouzi，类型选择 OpenAI",
+          "名称写 ergouzi，类型选 OpenAI。"
+        )}
+      </section>
+
+      <section>
+        <h2>第三步：填写 Key 和 API 地址</h2>
+        <p>
+          新建完成后，选中左侧的 <strong>ergouzi</strong> 提供商。把 API 密钥粘贴到 <strong>API 密钥</strong> 输入框，API 地址填写 <code class="inline-code">${API_HOST}</code>。
+        </p>
+        <ul>
+          <li>右上角开关需要保持开启状态。</li>
+          <li>API 地址只填根地址，看到预览变成 <code class="inline-code">${API_HOST}/v1/chat/completions</code> 即可。</li>
+          <li>填完后点击 <strong>获取模型列表</strong>。</li>
+        </ul>
+        ${docImage(
+          CHERRY_PROVIDER_CONFIG_IMAGE,
+          "Cherry Studio 中 ergouzi 提供商的 API 密钥和 API 地址配置",
+          "粘贴 API Key，API 地址填写 https://ergouzi.life，然后点击“获取模型列表”。"
+        )}
+      </section>
+
+      <section>
+        <h2>第四步：添加模型</h2>
+        <p>
+          模型列表弹出后，找到你要使用的模型，点击每一行右侧的 <strong>+</strong> 添加到当前提供商。普通聊天建议先添加文本模型，例如 <strong>gpt-5.4</strong>；如果要使用图片能力，再添加 <strong>gpt-image-2</strong>。
+        </p>
+        ${docImage(
+          CHERRY_MODEL_PICKER_IMAGE,
+          "Cherry Studio 模型列表弹窗中模型右侧的加号",
+          "在模型弹窗里点击模型右侧“+”，把需要的模型加入 ergouzi。"
+        )}
+        <p>
+          添加后回到提供商详情页，模型区域会出现已加入的模型列表。这里能看到模型数量和模型名称，就说明模型已经写入 Cherry Studio。
+        </p>
+        ${docImage(
+          CHERRY_MODEL_LIST_IMAGE,
+          "Cherry Studio ergouzi 提供商下已添加的模型列表",
+          "模型列表中出现 gpt-5.4、gpt-image-2 等模型，说明添加成功。"
+        )}
+      </section>
+
+      <section>
+        <h2>第五步：回到首页切换模型</h2>
+        <p>
+          回到 <strong>首页</strong>，点击聊天顶部的模型名称。如果当前选中的是 <strong>gpt-image-2</strong> 这类图片模型，普通对话测试时先切换成文本模型。
+        </p>
+        ${docImage(
+          CHERRY_HOME_MODEL_IMAGE,
+          "Cherry Studio 首页顶部的模型选择器",
+          "回到首页后，点击顶部模型名称打开模型选择器。"
+        )}
+        <p>
+          在模型选择器里找到 <strong>ergouzi</strong> 分组，选择用于聊天的文本模型，例如 <strong>gpt-5.4</strong>。
+        </p>
+        ${docImage(
+          CHERRY_MODEL_SWITCHER_IMAGE,
+          "Cherry Studio 模型选择器中 ergouzi 分组的模型",
+          "在 ergouzi 分组下选择 gpt-5.4 等文本模型。"
+        )}
+      </section>
+
+      <section>
+        <h2>第六步：发送消息测试</h2>
+        <p>
+          在输入框里发送一句简单消息，例如“你好呀，二狗子”。如果模型正常回复，说明 API Key、API 地址和模型配置都已经生效。
+        </p>
+        ${docImage(
+          CHERRY_CHAT_TEST_IMAGE,
+          "Cherry Studio 使用 gpt-5.4 ergouzi 模型正常回复测试消息",
+          "收到正常回复后，Cherry Studio 集成完成。"
+        )}
       </section>
 
       <section>
         <h2>排查建议</h2>
         <ul>
-          <li>对话正常但无法画图：通常是没有添加图像模型，或者图片接口未开放。</li>
-          <li>模型列表为空：优先检查地址、Key 和客户端里模型拉取方式是否为 OpenAI 兼容。</li>
+          <li>点击“获取模型列表”后为空：优先检查 API 地址是否只填了 <code class="inline-code">${API_HOST}</code>，以及 API Key 是否复制完整。</li>
+          <li>模型弹窗里有模型，但首页看不到：确认你已经点了模型右侧的“+”，并且当前提供商右上角开关处于开启状态。</li>
+          <li>普通聊天没有回复：先切换到文本模型，例如 gpt-5.4，不要用 gpt-image-2 做普通对话测试。</li>
+          <li>对话正常但无法画图：确认已经把 gpt-image-2 这类图片模型添加到 ergouzi 提供商，并在图片功能里选择它。</li>
           <li>请求报 401 / 403：通常是 API Key 无效、被禁用，或者当前分组没有该模型权限。</li>
-          <li>客户端里既能填 Host 又能填 Path 时，优先把完整 Base URL 放到 Path/Endpoint 字段，避免重复拼接。</li>
         </ul>
       </section>
     `,
