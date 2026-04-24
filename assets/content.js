@@ -13,15 +13,15 @@ const TOKEN_CREATE_FORM_IMAGE = "./assets/token/step2.png";
 const TOKEN_CREATE_RESULT_IMAGE = "./assets/token/step3.png";
 const CODEX_CONFIG_IMAGE = "./assets/codex/config.png";
 const FAQ_CLAUDE_CODE_OPENAI_IMAGE = "./assets/faq/claude-code-openai-model.png";
-const CHERRY_AGENT_SETTINGS_IMAGE = "./assets/cherry-studio/agent-settings-entry.png";
-const CHERRY_ADD_ENTRY_IMAGE = "./assets/cherry-studio/api-server-add-entry.png";
-const CHERRY_ADD_PROVIDER_IMAGE = "./assets/cherry-studio/add-provider-dialog.png";
-const CHERRY_PROVIDER_CONFIG_IMAGE = "./assets/cherry-studio/provider-config.png";
-const CHERRY_MODEL_PICKER_IMAGE = "./assets/cherry-studio/model-picker-add.png";
-const CHERRY_MODEL_LIST_IMAGE = "./assets/cherry-studio/model-list-result.png";
-const CHERRY_HOME_MODEL_IMAGE = "./assets/cherry-studio/home-model-selected.png";
-const CHERRY_MODEL_SWITCHER_IMAGE = "./assets/cherry-studio/model-switcher.png";
-const CHERRY_CHAT_TEST_IMAGE = "./assets/cherry-studio/chat-test-success.png";
+const CHERRY_AGENT_SETTINGS_IMAGE = "./assets/cherry-studio/agent-settings-entry.webp";
+const CHERRY_ADD_ENTRY_IMAGE = "./assets/cherry-studio/api-server-add-entry.webp";
+const CHERRY_ADD_PROVIDER_IMAGE = "./assets/cherry-studio/add-provider-dialog.webp";
+const CHERRY_PROVIDER_CONFIG_IMAGE = "./assets/cherry-studio/provider-config.webp";
+const CHERRY_MODEL_PICKER_IMAGE = "./assets/cherry-studio/model-picker-add.webp";
+const CHERRY_MODEL_LIST_IMAGE = "./assets/cherry-studio/model-list-result.webp";
+const CHERRY_HOME_MODEL_IMAGE = "./assets/cherry-studio/home-model-selected.webp";
+const CHERRY_MODEL_SWITCHER_IMAGE = "./assets/cherry-studio/model-switcher.webp";
+const CHERRY_CHAT_TEST_IMAGE = "./assets/cherry-studio/chat-test-success.webp";
 
 const escapeHtml = (value) =>
   value
@@ -54,7 +54,7 @@ const pageHead = (section, title, lead, badge) => `
 const docImage = (src, alt, caption) => `
   <div class="doc-image-wrap">
     <div class="doc-image-frame">
-      <img class="doc-image" src="${src}" alt="${alt}" loading="lazy" />
+      <img class="doc-image" src="${src}" alt="${alt}" width="1440" height="1203" loading="lazy" decoding="async" />
     </div>
     <p class="doc-image-caption">${caption}</p>
   </div>
@@ -1324,7 +1324,7 @@ claude
         <ul>
           <li>安装 <code class="inline-code">@openai/codex</code>。</li>
           <li>写入 <code class="inline-code">~/.codex/config.toml</code>。</li>
-          <li>设置 <code class="inline-code">ERGOUZI_API_KEY</code> 后运行 <code class="inline-code">codex</code>。</li>
+          <li>设置 <code class="inline-code">ERGOUZI_CODEX_API_TOKEN</code> 后运行 <code class="inline-code">codex</code>。</li>
         </ul>
         ${code(
           "bash",
@@ -1346,11 +1346,13 @@ model_provider = "ergouzi"
 [model_providers.ergouzi]
 name = "ergouzi"
 base_url = "https://ergouzi.life/v1"
-env_key = "ERGOUZI_API_KEY"
+# 注意：env_key 填的是“环境变量名”，不是你的真实 API Token
+# 真实 Token 放到下面的 export 里
+env_key = "ERGOUZI_CODEX_API_TOKEN"
 wire_api = "responses"
 EOF
 
-export ERGOUZI_API_KEY="API_token_xxxxxxxxxxx"
+export ERGOUZI_CODEX_API_TOKEN="API_token_xxxxxxxxxxx"
 
 codex
           `,
@@ -1358,13 +1360,13 @@ codex
         ${callout(
           "info",
           "关键说明",
-          `<code class="inline-code">model_provider = "ergouzi"</code> 是开关；注释掉这一行会回到 Codex 默认 provider。这里保持 <code class="inline-code">base_url = "https://ergouzi.life/v1"</code>，并使用 <code class="inline-code">wire_api = "responses"</code>。`
+          `<code class="inline-code">model_provider = "ergouzi"</code> 是开关；注释掉这一行会回到 Codex 默认 provider。<code class="inline-code">env_key</code> 只填写环境变量名，真实 Token 通过 <code class="inline-code">export ERGOUZI_CODEX_API_TOKEN="API_token_xxx"</code> 设置。这里保持 <code class="inline-code">base_url = "https://ergouzi.life/v1"</code>，并使用 <code class="inline-code">wire_api = "responses"</code>。`
         )}
         <div class="doc-image-wrap">
           <div class="doc-image-frame">
-            <img class="doc-image" src="${CODEX_CONFIG_IMAGE}" alt="Codex CLI 的 config.toml 与 ERGOUZI_API_KEY 环境变量配置示意图" loading="lazy" />
+            <img class="doc-image" src="${CODEX_CONFIG_IMAGE}" alt="Codex CLI 的 config.toml 与环境变量配置示意图" loading="lazy" />
           </div>
-          <p class="doc-image-caption">Windows 系统配置示意图：在 <code class="inline-code">.codex/config.toml</code> 中写入 provider 配置，并设置 <code class="inline-code">ERGOUZI_API_KEY</code> 环境变量。</p>
+          <p class="doc-image-caption">Windows 系统配置示意图：在 <code class="inline-code">.codex/config.toml</code> 中写入 provider 配置，并设置对应环境变量。注意 <code class="inline-code">env_key</code> 写的是变量名，真实 Token 不要直接写在这里。</p>
         </div>
         <ul>
           <li>切模型或推理强度：修改 <code class="inline-code">model</code> 和 <code class="inline-code">model_reasoning_effort</code>。</li>
