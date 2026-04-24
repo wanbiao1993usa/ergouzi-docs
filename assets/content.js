@@ -789,7 +789,7 @@ curl --request POST \\
         ${callout(
           "info",
           "查看单独教程",
-          '具体字段和截图步骤已经拆到 <a href="#/apps/trae-cn">Trae CN 配置</a> 页面。旧版本如果没有“自定义请求地址”字段，再考虑升级 Trae CN 或使用 Trae-Proxy 这类代理方案。'
+          '具体字段和截图步骤已经拆到 <a href="https://doc.sig.ergouzi.life/#/apps/trae-cn" target="_blank" rel="noreferrer">Trae CN 配置教程</a>。旧版本如果没有“自定义请求地址”字段，再考虑升级 Trae CN 或使用 Trae-Proxy 这类代理方案。'
         )}
       </section>
 
