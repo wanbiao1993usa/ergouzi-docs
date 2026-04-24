@@ -12,6 +12,7 @@ const TOKEN_CREATE_ENTRY_IMAGE = "./assets/token/step1.png";
 const TOKEN_CREATE_FORM_IMAGE = "./assets/token/step2.png";
 const TOKEN_CREATE_RESULT_IMAGE = "./assets/token/step3.png";
 const CODEX_CONFIG_IMAGE = "./assets/codex/config.png";
+const FAQ_CLAUDE_CODE_OPENAI_IMAGE = "./assets/faq/claude-code-openai-model.png";
 
 const escapeHtml = (value) =>
   value
@@ -43,7 +44,11 @@ const pageHead = (section, title, lead, badge) => `
 
 export const navSections = [
   { title: "开始", items: ["/"] },
-  { title: "账户教程", items: ["/purchase-guide", "/subscription-guide", "/token-guide"] },
+  {
+    title: "账户教程",
+    items: ["/token-billing-guide", "/purchase-guide", "/subscription-guide", "/token-guide"],
+  },
+  { title: "帮助", items: ["/faq"] },
   {
     title: "应用集成",
     items: [
@@ -194,6 +199,10 @@ curl --request POST \\
             <strong>API 调用示例</strong>
             <p>直接复制 curl、Node.js、Python 示例进行联调。</p>
           </a>
+          <a class="link-card tone-important" href="#/token-billing-guide">
+            <strong>重要说明</strong>
+            <p>说明 API Token、令牌分组、普通充值余额和无限订阅之间的关系。</p>
+          </a>
           <a class="link-card" href="#/purchase-guide">
             <strong>购买普通兑换码</strong>
             <p>从注册登录、购买兑换码到最终兑换额度的完整流程说明。</p>
@@ -205,6 +214,10 @@ curl --request POST \\
           <a class="link-card" href="#/token-guide">
             <strong>创建 API Token</strong>
             <p>从进入控制台、选择令牌分组到最终拿到 Token 的完整流程说明。</p>
+          </a>
+          <a class="link-card" href="#/faq">
+            <strong>常见问题</strong>
+            <p>整理模型分组报错、Trae、Claude Code 和 VS Code 插件相关问题。</p>
           </a>
         </div>
       </section>
@@ -261,6 +274,10 @@ curl --request POST \\
             <p>按你用的官方库选择 <a href="#/sdk/openai">OpenAI</a>、<a href="#/sdk/claude">Claude</a> 或 <a href="#/sdk/gemini">Gemini</a> 页面。</p>
           </div>
           <div class="spot-card">
+            <strong>Token 与付费</strong>
+            <p>如果你不清楚 Token、分组和扣费关系，先看 <a href="#/token-billing-guide">重要说明</a> 页面。</p>
+          </div>
+          <div class="spot-card">
             <strong>购买普通兑换码</strong>
             <p>如果你需要购买并兑换源码商品，直接看 <a href="#/purchase-guide">购买普通兑换码</a> 页面。</p>
           </div>
@@ -271,6 +288,10 @@ curl --request POST \\
           <div class="spot-card">
             <strong>创建令牌</strong>
             <p>如果你要开始调用接口，先看 <a href="#/token-guide">创建 API Token</a> 页面，拿到令牌后再接入客户端或 SDK。</p>
+          </div>
+          <div class="spot-card">
+            <strong>常见问题</strong>
+            <p>遇到模型不可用、Trae 或 Claude Code 相关问题时，先看 <a href="#/faq">常见问题</a> 页面。</p>
           </div>
         </div>
       </section>
@@ -487,6 +508,110 @@ curl --request POST \\
     `,
   },
   {
+    path: "/token-billing-guide",
+    group: "账户教程",
+    title: "重要说明",
+    tone: "important",
+    summary: "说明 API Token、令牌分组、普通充值余额和无限订阅之间的关系。",
+    keywords: ["API Token", "令牌分组", "分组", "倍率", "付费", "余额", "普通充值", "无限订阅", "扣费"],
+    content: `
+      ${pageHead(
+        "账户教程",
+        "重要说明",
+        "这页专门说明 API Token、令牌分组和付费方式之间的关系。理解这部分后，再去创建 API Token 会更清楚。",
+        "Guide",
+      )}
+
+      ${callout(
+        "info",
+        "先分清三个概念",
+        "API Token 负责鉴权，令牌分组决定权限和倍率，普通充值或无限订阅决定账号可用权益。它们不是同一个东西。"
+      )}
+
+      <section>
+        <h2>核心关系</h2>
+        <div class="mini-card-grid">
+          <div class="spot-card">
+            <strong>API Token 是调用凭证</strong>
+            <p>Token 用来证明这次 API 请求属于你的账号。客户端、SDK 或代码里填写的就是这个 Token。</p>
+          </div>
+          <div class="spot-card">
+            <strong>分组决定权限和倍率</strong>
+            <p>每个 Token 创建时都要选择一个分组。分组会影响可用模型，也会决定这个 Token 调用模型时按什么倍率计费。</p>
+          </div>
+          <div class="spot-card">
+            <strong>付费发生在实际调用时</strong>
+            <p>创建 Token 本身不是充值。真正产生费用的是用这个 Token 调用模型时，系统会按所属分组的倍率计算消耗。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>它们分别代表什么</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>你看到的内容</th>
+                <th>它代表什么</th>
+                <th>和付费的关系</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>API Token</td>
+                <td>请求鉴权用的密钥，用来填到应用、SDK 或代码里。</td>
+                <td>Token 本身不代表余额，也不代表套餐；它只是扣费时识别账号和分组。</td>
+              </tr>
+              <tr>
+                <td>令牌分组</td>
+                <td>Token 所属的使用档位，通常会绑定模型权限和价格倍率。</td>
+                <td>同一个模型用不同分组调用，实际消耗可能不同。比如 0.2x 就是按官网价格的 20% 计费。</td>
+              </tr>
+              <tr>
+                <td>普通充值余额</td>
+                <td>通过普通兑换码兑换到账户里的额度。</td>
+                <td>按量调用时从余额里扣费，扣费金额由模型价格和 Token 所属分组倍率共同决定。</td>
+              </tr>
+              <tr>
+                <td>无限订阅</td>
+                <td>需要购买无限流量套餐，并把用户名发给客服手动开通。</td>
+                <td>订阅开通后仍然使用 API Token 鉴权；Token 负责调用身份，订阅负责账号权益。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>推荐阅读顺序</h2>
+        <div class="mini-card-grid">
+          <div class="spot-card">
+            <strong>1. 先确认付费方式</strong>
+            <p>按量使用就先购买普通兑换码；需要无限流量则购买无限订阅。</p>
+          </div>
+          <div class="spot-card">
+            <strong>2. 再创建 API Token</strong>
+            <p>进入令牌管理创建 Token，并选择适合的分组。分组会影响权限和倍率。</p>
+          </div>
+          <div class="spot-card">
+            <strong>3. 最后接入应用或代码</strong>
+            <p>把创建好的 Token 填到客户端、SDK 或 API 请求里，后续调用都会按该 Token 的分组生效。</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>下一步</h2>
+        <p>
+          如果你还没有额度或订阅，先看 <a href="#/purchase-guide">购买普通兑换码</a> 或
+          <a href="#/subscription-guide">购买无限订阅</a>。如果已经准备好账号权益，就继续看
+          <a href="#/token-guide">创建 API Token</a>。
+        </p>
+      </section>
+    `,
+  },
+  {
     path: "/token-guide",
     group: "账户教程",
     title: "创建 API Token",
@@ -584,6 +709,95 @@ curl --request POST \\
           <li>名称建议按用途命名，这样后续在多个令牌之间切换时不容易混淆。</li>
           <li>Token 创建完成后应及时复制保存，后续客户端、SDK 和 API 请求都要用它做鉴权。</li>
         </ul>
+      </section>
+    `,
+  },
+  {
+    path: "/faq",
+    group: "帮助",
+    title: "常见问题",
+    summary: "整理模型分组、Trae、Claude Code 与 VS Code 插件相关的常见问题。",
+    keywords: [
+      "常见问题",
+      "FAQ",
+      "503",
+      "No available channel",
+      "gpt-5.5",
+      "2折组",
+      "0.7折分组",
+      "Trae",
+      "Trae-Proxy",
+      "Claude Code",
+      "VS Code 插件",
+    ],
+    content: `
+      ${pageHead(
+        "帮助",
+        "常见问题",
+        "这里整理接入和使用过程中最常见的报错、客户端限制以及 Claude Code 使用方式。",
+        "FAQ",
+      )}
+
+      <section>
+        <h2>1. API Error: 503 No available channel for model gpt-5.5 under group 2折组</h2>
+        <p>
+          这个报错表示当前选择的 <strong>2折组</strong> 分组下没有可用的
+          <code class="inline-code">gpt-5.5</code> 模型渠道。它不是你的 API Token 格式错误，而是模型和分组没有匹配上。
+        </p>
+        ${callout(
+          "info",
+          "处理方式",
+          '进入 <a href="https://ergouzi.life/pricing" target="_blank" rel="noreferrer">模型广场</a>，按分组查看当前分组支持哪些模型，再选择对应模型使用。默认使用 0.7 折分组通常会更稳。'
+        )}
+        <ul>
+          <li>如果必须使用 <code class="inline-code">gpt-5.5</code>，先确认模型广场里哪个分组支持它。</li>
+          <li>如果当前分组不支持该模型，换成该分组支持的模型，或切换到支持目标模型的分组。</li>
+          <li>报错里的 request id 可以保留，后续需要排查时方便定位请求。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>2. 国产 Trae 是否支持自定义接入</h2>
+        <p>
+          目前 Trae 不支持直接自定义 Base URL 和模型，所以不能像 Cherry Studio、Claude Code 这类工具一样直接填写二狗子的地址和模型名。
+        </p>
+        <p>
+          如果要在 Trae 里使用，需要通过第三方中转来适配。可以使用 <strong>Trae-Proxy</strong> 这类代理方案，把 Trae 的请求转发到自定义接口。
+        </p>
+      </section>
+
+      <section>
+        <h2>3. OpenAI 模型可以直接在 Claude Code 中使用吗</h2>
+        <p>
+          可以。Claude Code 读取的是 Anthropic 兼容环境变量，你可以把 Base URL 指向二狗子，然后把默认 Sonnet / Haiku 模型名设置成 OpenAI 模型名。
+        </p>
+        ${code(
+          "bash",
+          `
+export ANTHROPIC_BASE_URL="https://ergouzi.life"
+export ANTHROPIC_AUTH_TOKEN="sk-your-api-token"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="gpt-5.4"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="gpt-5.4"
+
+claude
+        `,
+        )}
+        <div class="doc-image-wrap">
+          <div class="doc-image-frame">
+            <img class="doc-image" src="${FAQ_CLAUDE_CODE_OPENAI_IMAGE}" alt="Claude Code 使用 OpenAI 模型的环境变量配置示例" loading="lazy" />
+          </div>
+          <p class="doc-image-caption">设置 Claude Code 的 Anthropic 兼容环境变量后，可以让它使用 OpenAI 模型名。</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>4. Claude Code 的 VS Code 插件可以使用吗</h2>
+        <p>
+          不可以。目前 Claude Code 的 VS Code 插件不支持自定义 Base URL 和 API Key，所以不能直接接入二狗子的自定义接口。
+        </p>
+        <p>
+          社区已经有人提交相关 feature，但截至 <strong>2026 年 4 月 24 日</strong>，这个能力还没有实现。如果后续插件支持自定义 Base URL 和 API Key，再按官方插件能力调整配置方式。
+        </p>
       </section>
     `,
   },

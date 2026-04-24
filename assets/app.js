@@ -1,4 +1,4 @@
-import { navSections, pages } from "./content.js?v=20260424-2";
+import { navSections, pages } from "./content.js?v=20260424-8";
 
 const pageMap = new Map(pages.map((page) => [page.path, page]));
 
@@ -31,7 +31,7 @@ const normalizePath = (hashValue) => {
 
 const hrefFor = (path) => `#${path}`;
 
-const pageIndex = pages.map((page) => page.path);
+const pageIndex = navSections.flatMap((section) => section.items);
 
 const stripHtml = (input) =>
   input
@@ -121,8 +121,9 @@ function renderSidebar(currentPath) {
           .map((path) => {
             const page = pageMap.get(path);
             if (!page) return "";
+            const toneClass = page.tone ? `tone-${page.tone}` : "";
             return `
-              <a class="nav-link ${path === currentPath ? "active" : ""}" href="${hrefFor(path)}">
+              <a class="nav-link ${toneClass} ${path === currentPath ? "active" : ""}" href="${hrefFor(path)}">
                 ${page.title}
               </a>
             `;
@@ -329,6 +330,7 @@ function renderPage() {
   renderSidebar(page.path);
   renderBreadcrumbs(page);
 
+  article.dataset.pageTone = page.tone || "";
   article.innerHTML = `${page.content}${renderPageNav(page.path)}`;
   setupCodeBlocks();
   setupTabs();
