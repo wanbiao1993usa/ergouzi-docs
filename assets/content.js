@@ -55,8 +55,8 @@ const pageHead = (section, title, lead, badge) => `
   </div>
 `;
 
-const docImage = (src, alt, caption, width = 1440, height = 1203) => `
-  <div class="doc-image-wrap">
+const docImage = (src, alt, caption, width = 1440, height = 1203, className = "") => `
+  <div class="doc-image-wrap ${className}">
     <div class="doc-image-frame">
       <img class="doc-image" src="${src}" alt="${alt}" width="${width}" height="${height}" loading="lazy" decoding="async" />
     </div>
@@ -1759,7 +1759,10 @@ gemini
         ${docImage(
           CHERRY_AGENT_SETTINGS_IMAGE,
           "Cherry Studio 智能体页中的前往设置按钮",
-          "在智能体页点击“前往设置”，进入模型服务相关配置。"
+          "在智能体页点击“前往设置”，进入模型服务相关配置。",
+          1080,
+          903,
+          "doc-image-compact"
         )}
       </section>
 
@@ -1771,7 +1774,10 @@ gemini
         ${docImage(
           CHERRY_ADD_ENTRY_IMAGE,
           "Cherry Studio 模型服务页底部的添加按钮",
-          "在模型服务列表底部点击“添加”。"
+          "在模型服务列表底部点击“添加”。",
+          1080,
+          903,
+          "doc-image-compact"
         )}
         <p>
           在“添加提供商”弹窗里，提供商名称填写 <strong>ergouzi</strong>，提供商类型选择 <strong>OpenAI</strong>，然后点击 <strong>确定</strong>。
@@ -1779,7 +1785,10 @@ gemini
         ${docImage(
           CHERRY_ADD_PROVIDER_IMAGE,
           "Cherry Studio 添加提供商弹窗，名称填写 ergouzi，类型选择 OpenAI",
-          "名称写 ergouzi，类型选 OpenAI。"
+          "名称写 ergouzi，类型选 OpenAI。",
+          1080,
+          903,
+          "doc-image-compact"
         )}
       </section>
 
@@ -1796,7 +1805,10 @@ gemini
         ${docImage(
           CHERRY_PROVIDER_CONFIG_IMAGE,
           "Cherry Studio 中 ergouzi 提供商的 API 密钥和 API 地址配置",
-          "粘贴 API Key，API 地址填写 https://ergouzi.life，然后点击“获取模型列表”。"
+          "粘贴 API Key，API 地址填写 https://ergouzi.life，然后点击“获取模型列表”。",
+          1080,
+          903,
+          "doc-image-compact"
         )}
       </section>
 
@@ -1808,7 +1820,10 @@ gemini
         ${docImage(
           CHERRY_MODEL_PICKER_IMAGE,
           "Cherry Studio 模型列表弹窗中模型右侧的加号",
-          "在模型弹窗里点击模型右侧“+”，把需要的模型加入 ergouzi。"
+          "在模型弹窗里点击模型右侧“+”，把需要的模型加入 ergouzi。",
+          1080,
+          903,
+          "doc-image-compact"
         )}
         <p>
           添加后回到提供商详情页，模型区域会出现已加入的模型列表。这里能看到模型数量和模型名称，就说明模型已经写入 Cherry Studio。
@@ -1816,7 +1831,10 @@ gemini
         ${docImage(
           CHERRY_MODEL_LIST_IMAGE,
           "Cherry Studio ergouzi 提供商下已添加的模型列表",
-          "模型列表中出现 gpt-5.4、gpt-image-2 等模型，说明添加成功。"
+          "模型列表中出现 gpt-5.4、gpt-image-2 等模型，说明添加成功。",
+          1080,
+          903,
+          "doc-image-compact"
         )}
       </section>
 
@@ -1828,7 +1846,10 @@ gemini
         ${docImage(
           CHERRY_HOME_MODEL_IMAGE,
           "Cherry Studio 首页顶部的模型选择器",
-          "回到首页后，点击顶部模型名称打开模型选择器。"
+          "回到首页后，点击顶部模型名称打开模型选择器。",
+          1080,
+          903,
+          "doc-image-compact"
         )}
         <p>
           在模型选择器里找到 <strong>ergouzi</strong> 分组，选择用于聊天的文本模型，例如 <strong>gpt-5.4</strong>。
@@ -1836,7 +1857,10 @@ gemini
         ${docImage(
           CHERRY_MODEL_SWITCHER_IMAGE,
           "Cherry Studio 模型选择器中 ergouzi 分组的模型",
-          "在 ergouzi 分组下选择 gpt-5.4 等文本模型。"
+          "在 ergouzi 分组下选择 gpt-5.4 等文本模型。",
+          1080,
+          903,
+          "doc-image-compact"
         )}
       </section>
 
@@ -1848,7 +1872,10 @@ gemini
         ${docImage(
           CHERRY_CHAT_TEST_IMAGE,
           "Cherry Studio 使用 gpt-5.4 ergouzi 模型正常回复测试消息",
-          "收到正常回复后，Cherry Studio 集成完成。"
+          "收到正常回复后，Cherry Studio 集成完成。",
+          1080,
+          903,
+          "doc-image-compact"
         )}
       </section>
 
@@ -1961,8 +1988,9 @@ gemini
           TRAE_SETTINGS_ENTRY_IMAGE,
           "Trae CN 顶部工具栏中的配置按钮",
           "在 Trae CN 顶部点击齿轮配置按钮。",
-          1440,
-          900
+          1080,
+          675,
+          "doc-image-compact"
         )}
       </section>
 
@@ -1975,8 +2003,9 @@ gemini
           TRAE_MODEL_MANAGEMENT_IMAGE,
           "Trae CN 设置页中的模型管理和添加模型按钮",
           "在“模型”页面点击“添加模型”。",
-          1440,
-          900
+          1080,
+          675,
+          "doc-image-compact"
         )}
       </section>
 
@@ -1996,8 +2025,9 @@ gemini
           TRAE_ADD_MODEL_IMAGE,
           "Trae CN 添加模型弹窗中的模型 ID、API 密钥和自定义请求地址",
           "模型 ID 填模型名，API 密钥填二狗子 Token，自定义请求地址填完整 Chat Completions 地址。",
-          1440,
-          900
+          1080,
+          675,
+          "doc-image-compact"
         )}
       </section>
 

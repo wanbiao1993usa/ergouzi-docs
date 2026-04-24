@@ -1,4 +1,4 @@
-import { navSections, pages } from "./content.js?v=20260424-13";
+import { navSections, pages } from "./content.js?v=20260425-2";
 
 const pageMap = new Map(pages.map((page) => [page.path, page]));
 
@@ -162,6 +162,12 @@ function renderSidebar(currentPath) {
       },
     )
     .join("");
+
+  const activeLink = sidebarNav.querySelector(".nav-link.active");
+  if (activeLink) {
+    const targetTop = activeLink.offsetTop - sidebarNav.clientHeight / 2 + activeLink.clientHeight / 2;
+    sidebarNav.scrollTop = Math.max(0, targetTop);
+  }
 
   sidebarNav.querySelectorAll("[data-nav-group-toggle]").forEach((button) => {
     button.addEventListener("click", () => {
