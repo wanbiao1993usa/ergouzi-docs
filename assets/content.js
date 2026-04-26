@@ -12,7 +12,8 @@ const TOKEN_CREATE_ENTRY_IMAGE = "./assets/token/step1.png";
 const TOKEN_CREATE_FORM_IMAGE = "./assets/token/step2.png";
 const TOKEN_CREATE_RESULT_IMAGE = "./assets/token/step3.png";
 const CODEX_CONFIG_IMAGE = "./assets/codex/config.png";
-const FAQ_CLAUDE_CODE_OPENAI_IMAGE = "./assets/faq/claude-code-openai-model.png";
+const FAQ_CLAUDE_CODE_VSCODE_SETTINGS_IMAGE = "./assets/faq/claude-code-vscode-settings.webp";
+const FAQ_CLAUDE_CODE_VSCODE_SETTINGS_FALLBACK_IMAGE = "./assets/faq/claude-code-vscode-settings.png";
 const CHERRY_AGENT_SETTINGS_IMAGE = "./assets/cherry-studio/agent-settings-entry.webp";
 const CHERRY_ADD_ENTRY_IMAGE = "./assets/cherry-studio/api-server-add-entry.webp";
 const CHERRY_ADD_PROVIDER_IMAGE = "./assets/cherry-studio/add-provider-dialog.webp";
@@ -115,207 +116,91 @@ export const pages = [
     path: "/",
     group: "开始",
     title: "首页",
-    summary: "Ergouzi API 文档总览，包含推荐接入路线、基础地址和快速开始。",
+    summary: "Ergouzi API 文档入口和基础地址。",
     keywords: ["首页", "快速开始", "总览", "OpenAI", "Claude", "Gemini"],
     content: `
       <section class="hero">
         <p class="eyebrow">Ergouzi Docs</p>
-        <h1>统一接入 OpenAI、Claude 与 Gemini 的文档站</h1>
+        <h1>Ergouzi API 文档</h1>
         <p class="lead">
-          这套文档围绕 <code class="inline-code">${API_HOST}</code> 构建，覆盖应用集成、协议接入、官方 SDK 设置以及常见 API
-          调用示例。大多数业务直接走 OpenAI 兼容入口即可，只有在你明确需要官方原生字段时，再切换到 Claude 或 Gemini 原生协议。
+          默认地址：<code class="inline-code">${API_HOST}</code>。大多数场景优先使用 OpenAI 兼容入口。
         </p>
 
         <div class="pills">
-          <span class="pill">默认地址：<code class="inline-code">${API_HOST}</code></span>
-          <span class="pill">推荐协议：OpenAI Compatible</span>
-          <span class="pill">适配对象：Apps / SDK / Server-to-Server</span>
+          <span class="pill">OpenAI Compatible</span>
+          <span class="pill">Claude Native</span>
+          <span class="pill">Gemini Native</span>
         </div>
 
         <div class="button-row">
-          <a class="button" href="#/api/openai-compatible">从 OpenAI 兼容接入开始</a>
-          <a class="button-ghost" href="#/apps">查看应用集成总览</a>
-        </div>
-
-        <div class="metric-row">
-          <div class="metric-card">
-            <strong>协议入口</strong>
-            <div class="metric-value">3 类</div>
-            <p>OpenAI 兼容、Claude 原生、Gemini 原生。</p>
-          </div>
-          <div class="metric-card">
-            <strong>文档分层</strong>
-            <div class="metric-value">4 组</div>
-            <p>应用、API、SDK、调用示例分开组织，便于快速定位。</p>
-          </div>
-          <div class="metric-card">
-            <strong>默认域名</strong>
-            <div class="metric-value">1 个</div>
-            <p>全站所有示例都统一替换为 Ergouzi 站点地址。</p>
-          </div>
+          <a class="button" href="#/api/openai-compatible">API 接入</a>
+          <a class="button-ghost" href="#/apps">应用集成</a>
         </div>
       </section>
 
       <section>
-        <h2>推荐使用路线</h2>
-        <div class="hero-subgrid">
-          <div class="feature-card">
-            <strong>1. 应用集成</strong>
-            <p>如果你在使用 Cherry Studio、Next Chat、Lobe Chat、Cursor、Claude Code 之类的现成应用，先从应用集成总览进入，再按工具类型查看对应教程。</p>
-          </div>
-          <div class="feature-card">
-            <strong>2. API 集成</strong>
-            <p>如果你在做后端服务、自动化任务或 Agent 平台，大多数情况下直接使用 OpenAI 兼容接口就足够。</p>
-          </div>
-          <div class="feature-card">
-            <strong>3. SDK / 示例</strong>
-            <p>如果你已经确定使用官方 SDK 或希望直接抄一段可运行示例，可以从 SDK 集成与 API 示例两组页面进入。</p>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h2>30 秒快速开始</h2>
-        <p>
-          先准备你自己的 API Key，然后把默认 OpenAI 兼容地址设置到 SDK 或客户端里。下面是一段最小可运行请求：
-        </p>
-        ${code(
-          "bash",
-          `
-export ERGOUZI_API_KEY="your_api_key_here"
-
-curl --request POST \\
-  --url ${OPENAI_BASE}/chat/completions \\
-  --header "Content-Type: application/json" \\
-  --header "Authorization: Bearer $ERGOUZI_API_KEY" \\
-  --data '{
-    "model": "gpt-4o-mini",
-    "messages": [
-      {"role": "user", "content": "请用一句话介绍 Ergouzi API。"}
-    ]
-  }'
-        `,
-        )}
-        ${callout(
-          "info",
-          "建议默认从 OpenAI 兼容开始",
-          "它覆盖聊天、多模态、图片和音频等大多数常见场景，后续再按需切换到 Claude 或 Gemini 原生形态。"
-        )}
-      </section>
-
-      <section>
-        <h2>文档入口</h2>
+        <h2>常用入口</h2>
         <div class="card-grid">
-          <a class="link-card" href="#/apps">
-            <strong>应用集成</strong>
-            <p>覆盖 Cherry Studio、Next Chat、Cursor、Claude Code、LangBot、FluentRead 等常见客户端与工具。</p>
-          </a>
-          <a class="link-card" href="#/api">
-            <strong>API 集成</strong>
-            <p>理解三种协议入口的差异、鉴权方式以及适用范围。</p>
-          </a>
-          <a class="link-card" href="#/sdk/openai">
-            <strong>SDK 集成</strong>
-            <p>OpenAI、Anthropic 与 Gemini 官方 SDK 的配置示例。</p>
-          </a>
-          <a class="link-card" href="#/examples/chat-completions">
-            <strong>API 调用示例</strong>
-            <p>直接复制 curl、Node.js、Python 示例进行联调。</p>
-          </a>
           <a class="link-card tone-important" href="#/token-billing-guide">
             <strong>重要说明</strong>
-            <p>说明 API Token、令牌分组、普通充值余额和无限订阅之间的关系。</p>
+            <p>Token、分组和付费关系。</p>
           </a>
           <a class="link-card" href="#/purchase-guide">
-            <strong>购买普通兑换码</strong>
-            <p>从注册登录、购买兑换码到最终兑换额度的完整流程说明。</p>
+            <strong>普通余额</strong>
+            <p>购买并兑换额度。</p>
           </a>
           <a class="link-card" href="#/subscription-guide">
-            <strong>购买无限订阅</strong>
-            <p>从注册登录、购买无限流量套餐到联系客服手动开通订阅的流程说明。</p>
+            <strong>无限订阅</strong>
+            <p>购买套餐并联系客服开通。</p>
           </a>
           <a class="link-card" href="#/token-guide">
             <strong>创建 API Token</strong>
-            <p>从进入控制台、选择令牌分组到最终拿到 Token 的完整流程说明。</p>
+            <p>生成调用凭证。</p>
+          </a>
+          <a class="link-card" href="#/apps">
+            <strong>应用集成</strong>
+            <p>客户端、插件和 CLI 配置。</p>
+          </a>
+          <a class="link-card" href="#/api/openai-compatible">
+            <strong>API 接入</strong>
+            <p>默认从 OpenAI 兼容开始。</p>
           </a>
           <a class="link-card" href="#/faq">
             <strong>常见问题</strong>
-            <p>整理模型分组报错、Trae、Claude Code 和 VS Code 插件相关问题。</p>
+            <p>报错和配置问题。</p>
           </a>
         </div>
       </section>
 
       <section>
-        <h2>基础地址与鉴权</h2>
+        <h2>基础地址</h2>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>接入风格</th>
+                <th>入口</th>
                 <th>Base URL</th>
-                <th>鉴权头</th>
-                <th>建议场景</th>
+                <th>用途</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>OpenAI 兼容</td>
                 <td><code class="inline-code">${OPENAI_BASE}</code></td>
-                <td><code class="inline-code">Authorization: Bearer &lt;API_KEY&gt;</code></td>
-                <td>默认推荐，覆盖大部分文本、多模态、图像和音频调用。</td>
+                <td>默认推荐。</td>
               </tr>
               <tr>
                 <td>Claude 原生</td>
                 <td><code class="inline-code">${CLAUDE_BASE}</code></td>
-                <td><code class="inline-code">x-api-key: &lt;API_KEY&gt;</code></td>
-                <td>需要严格对齐 Anthropic Messages API 字段时使用。</td>
+                <td>Anthropic 格式。</td>
               </tr>
               <tr>
                 <td>Gemini 原生</td>
                 <td><code class="inline-code">${GEMINI_BASE}</code></td>
-                <td><code class="inline-code">x-goog-api-key: &lt;API_KEY&gt;</code></td>
-                <td>需要严格对齐 Gemini generateContent 或流式 SSE 时使用。</td>
+                <td>Gemini 格式。</td>
               </tr>
             </tbody>
           </table>
-        </div>
-      </section>
-
-      <section>
-        <h2>后续阅读顺序</h2>
-        <div class="mini-card-grid">
-          <div class="spot-card">
-            <strong>应用用户</strong>
-            <p>先看 <a href="#/apps">应用集成总览</a>，再按聊天客户端、编辑器插件、CLI 工具或翻译/机器人分组进入。</p>
-          </div>
-          <div class="spot-card">
-            <strong>后端开发</strong>
-            <p>先看 <a href="#/api/openai-compatible">OpenAI 兼容</a>，然后对照 <a href="#/examples/responses">Responses</a> 或 <a href="#/examples/chat-completions">Chat Completions</a>。</p>
-          </div>
-          <div class="spot-card">
-            <strong>SDK 用户</strong>
-            <p>按你用的官方库选择 <a href="#/sdk/openai">OpenAI</a>、<a href="#/sdk/claude">Claude</a> 或 <a href="#/sdk/gemini">Gemini</a> 页面。</p>
-          </div>
-          <div class="spot-card">
-            <strong>Token 与付费</strong>
-            <p>如果你不清楚 Token、分组和扣费关系，先看 <a href="#/token-billing-guide">重要说明</a> 页面。</p>
-          </div>
-          <div class="spot-card">
-            <strong>购买普通兑换码</strong>
-            <p>如果你需要购买并兑换源码商品，直接看 <a href="#/purchase-guide">购买普通兑换码</a> 页面。</p>
-          </div>
-          <div class="spot-card">
-            <strong>购买无限订阅</strong>
-            <p>如果你需要无限流量套餐，直接看 <a href="#/subscription-guide">购买无限订阅</a> 页面。</p>
-          </div>
-          <div class="spot-card">
-            <strong>创建令牌</strong>
-            <p>如果你要开始调用接口，先看 <a href="#/token-guide">创建 API Token</a> 页面，拿到令牌后再接入客户端或 SDK。</p>
-          </div>
-          <div class="spot-card">
-            <strong>常见问题</strong>
-            <p>遇到模型不可用、Trae 或 Claude Code 相关问题时，先看 <a href="#/faq">常见问题</a> 页面。</p>
-          </div>
         </div>
       </section>
     `,
@@ -535,101 +420,51 @@ curl --request POST \\
     group: "账户教程",
     title: "重要说明",
     tone: "important",
-    summary: "说明 API Token、令牌分组、普通充值余额和无限订阅之间的关系。",
-    keywords: ["API Token", "令牌分组", "分组", "倍率", "付费", "余额", "普通充值", "无限订阅", "扣费"],
+    summary: "说明 API Token、令牌分组、模型支持分组和付费方式的关系。",
+    keywords: ["API Token", "令牌分组", "分组", "模型支持分组", "模型广场", "分组价格", "倍率", "付费", "余额", "普通充值", "无限订阅", "扣费"],
     content: `
       ${pageHead(
         "账户教程",
         "重要说明",
-        "这页专门说明 API Token、令牌分组和付费方式之间的关系。理解这部分后，再去创建 API Token 会更清楚。",
+        "先看懂 Token、分组和付费方式的关系，再去创建 API Token。",
         "Guide",
       )}
 
       ${callout(
         "info",
-        "先分清三个概念",
-        "API Token 负责鉴权，令牌分组决定权限和倍率，普通充值或无限订阅决定账号可用权益。它们不是同一个东西。"
+        "一句话说明",
+        "API Token 负责鉴权；令牌分组决定可用模型和价格；普通余额或无限订阅决定账号权益。"
       )}
 
       <section>
-        <h2>核心关系</h2>
-        <div class="mini-card-grid">
-          <div class="spot-card">
-            <strong>API Token 是调用凭证</strong>
-            <p>Token 用来证明这次 API 请求属于你的账号。客户端、SDK 或代码里填写的就是这个 Token。</p>
-          </div>
-          <div class="spot-card">
-            <strong>分组决定权限和倍率</strong>
-            <p>每个 Token 创建时都要选择一个分组。分组会影响可用模型，也会决定这个 Token 调用模型时按什么倍率计费。</p>
-          </div>
-          <div class="spot-card">
-            <strong>付费发生在实际调用时</strong>
-            <p>创建 Token 本身不是充值。真正产生费用的是用这个 Token 调用模型时，系统会按所属分组的倍率计算消耗。</p>
-          </div>
-        </div>
+        <h2>必须知道</h2>
+        <ul>
+          <li><strong>Token</strong> 是调用凭证，不是余额，也不是套餐。</li>
+          <li><strong>分组</strong> 决定这个 Token 能用哪些模型，以及按什么价格调用。</li>
+          <li><strong>普通充值</strong> 按量扣余额；<strong>无限订阅</strong> 开通后仍然用 Token 鉴权。</li>
+          <li>如果模型不支持当前分组，通常会出现 <code class="inline-code">No available channel</code> 或 group 相关报错。</li>
+        </ul>
       </section>
 
       <section>
-        <h2>它们分别代表什么</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>你看到的内容</th>
-                <th>它代表什么</th>
-                <th>和付费的关系</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>API Token</td>
-                <td>请求鉴权用的密钥，用来填到应用、SDK 或代码里。</td>
-                <td>Token 本身不代表余额，也不代表套餐；它只是扣费时识别账号和分组。</td>
-              </tr>
-              <tr>
-                <td>令牌分组</td>
-                <td>Token 所属的使用档位，通常会绑定模型权限和价格倍率。</td>
-                <td>同一个模型用不同分组调用，实际消耗可能不同。比如 0.2x 就是按官网价格的 20% 计费。</td>
-              </tr>
-              <tr>
-                <td>普通充值余额</td>
-                <td>通过普通兑换码兑换到账户里的额度。</td>
-                <td>按量调用时从余额里扣费，扣费金额由模型价格和 Token 所属分组倍率共同决定。</td>
-              </tr>
-              <tr>
-                <td>无限订阅</td>
-                <td>需要购买无限流量套餐，并把用户名发给客服手动开通。</td>
-                <td>订阅开通后仍然使用 API Token 鉴权；Token 负责调用身份，订阅负责账号权益。</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section>
-        <h2>推荐阅读顺序</h2>
-        <div class="mini-card-grid">
-          <div class="spot-card">
-            <strong>1. 先确认付费方式</strong>
-            <p>按量使用就先购买普通兑换码；需要无限流量则购买无限订阅。</p>
-          </div>
-          <div class="spot-card">
-            <strong>2. 再创建 API Token</strong>
-            <p>进入令牌管理创建 Token，并选择适合的分组。分组会影响权限和倍率。</p>
-          </div>
-          <div class="spot-card">
-            <strong>3. 最后接入应用或代码</strong>
-            <p>把创建好的 Token 填到客户端、SDK 或 API 请求里，后续调用都会按该 Token 的分组生效。</p>
-          </div>
-        </div>
+        <h2>如何查看某个模型支持哪些分组</h2>
+        <ol>
+          <li>打开 <a href="https://ergouzi.life/pricing" target="_blank" rel="noreferrer">模型广场</a>。</li>
+          <li>点击要使用的模型卡片，例如 <code class="inline-code">gpt-5.3-codex</code>。</li>
+          <li>在右侧详情面板查看“分组价格”。“分组”列里出现的分组，就是该模型支持的分组。</li>
+        </ol>
+        ${callout(
+          "warn",
+          "先对照再创建 Token",
+          "如果你的 Token 分组没有出现在该模型的“分组价格”里，就换模型或换支持该模型的分组。"
+        )}
       </section>
 
       <section>
         <h2>下一步</h2>
         <p>
-          如果你还没有额度或订阅，先看 <a href="#/purchase-guide">购买普通兑换码</a> 或
-          <a href="#/subscription-guide">购买无限订阅</a>。如果已经准备好账号权益，就继续看
-          <a href="#/token-guide">创建 API Token</a>。
+          先准备 <a href="#/purchase-guide">普通余额</a> 或 <a href="#/subscription-guide">无限订阅</a>，
+          再去 <a href="#/token-guide">创建 API Token</a>。
         </p>
       </section>
     `,
@@ -739,7 +574,7 @@ curl --request POST \\
     path: "/faq",
     group: "帮助",
     title: "常见问题",
-    summary: "整理模型分组、Trae、Claude Code 与 VS Code 插件相关的常见问题。",
+    summary: "模型分组、Trae、Claude Code 与 VS Code 插件常见问题。",
     keywords: [
       "常见问题",
       "FAQ",
@@ -753,51 +588,50 @@ curl --request POST \\
       "Trae-Proxy",
       "Claude Code",
       "VS Code 插件",
+      "claudeCode.environmentVariables",
+      "settings.json",
+      "client_gone",
+      "网络波动",
+      "梯子",
     ],
     content: `
       ${pageHead(
         "帮助",
         "常见问题",
-        "这里整理接入和使用过程中最常见的报错、客户端限制以及 Claude Code 使用方式。",
+        "常见报错和客户端配置的快速处理方式。",
         "FAQ",
-      )}
+	      )}
 
-      <section>
-        <h2>1. API Error: 503 No available channel for model gpt-5.5 under group 2折组</h2>
-        <p>
-          这个报错表示当前选择的 <strong>2折组</strong> 分组下没有可用的
-          <code class="inline-code">gpt-5.5</code> 模型渠道。它不是你的 API Token 格式错误，而是模型和分组没有匹配上。
-        </p>
-        ${callout(
-          "info",
-          "处理方式",
-          '进入 <a href="https://ergouzi.life/pricing" target="_blank" rel="noreferrer">模型广场</a>，按分组查看当前分组支持哪些模型，再选择对应模型使用。默认使用 0.7 折分组通常会更稳。'
-        )}
-        <ul>
-          <li>如果必须使用 <code class="inline-code">gpt-5.5</code>，先确认模型广场里哪个分组支持它。</li>
-          <li>如果当前分组不支持该模型，换成该分组支持的模型，或切换到支持目标模型的分组。</li>
-          <li>报错里的 request id 可以保留，后续需要排查时方便定位请求。</li>
-        </ul>
-      </section>
+	      <section>
+	        <h2>1. 日志出现 client_gone 怎么办</h2>
+	        ${callout(
+	          "danger",
+	          "先检查网络",
+	          "如果日志里出现 client_gone 错误，请先判断自己的梯子是否有网络波动。"
+	        )}
+	      </section>
 
-      <section>
-        <h2>2. 国产 Trae 是否支持自定义接入</h2>
-        <p>
-          新版 Trae CN 可以在设置里的“模型”页面添加自定义模型。它不是填写普通 Base URL，而是在添加模型弹窗里填写完整的
-          <code class="inline-code">/v1/chat/completions</code> 请求地址。
-        </p>
-        ${callout(
-          "info",
-          "查看单独教程",
-          '具体字段和截图步骤已经拆到 <a href="https://doc.sig.ergouzi.life/#/apps/trae-cn" target="_blank" rel="noreferrer">Trae CN 配置教程</a>。旧版本如果没有“自定义请求地址”字段，再考虑升级 Trae CN 或使用 Trae-Proxy 这类代理方案。'
-        )}
-      </section>
+	      <section>
+	        <h2>2. API Error: 503 No available channel for model gpt-5.5 under group 2折组</h2>
+	        <p>
+	          当前分组不支持这个模型。去 <a href="https://ergouzi.life/pricing" target="_blank" rel="noreferrer">模型广场</a> 查模型支持的分组，然后换模型或换分组。
+	        </p>
+	      </section>
 
-      <section>
-        <h2>3. OpenAI 模型可以直接在 Claude Code 中使用吗</h2>
-        <p>
-          可以。Claude Code 读取的是 Anthropic 兼容环境变量，你可以把 Base URL 指向二狗子，然后把默认 Sonnet / Haiku 模型名设置成 OpenAI 模型名。
+	      <section>
+	        <h2>3. 国产 Trae 是否支持自定义接入</h2>
+	        <p>
+	          支持。新版 Trae CN 在“模型”里添加自定义模型，请求地址填完整的
+	          <code class="inline-code">${TRAE_CHAT_COMPLETIONS_URL}</code>。
+          具体步骤看 <a href="#/apps/trae-cn">Trae CN 配置教程</a>。
         </p>
+	      </section>
+
+	      <section>
+	        <h2>4. OpenAI 模型可以直接在 Claude Code 中使用吗</h2>
+	        <p>
+	          可以，把 Anthropic 环境变量指向二狗子，并把默认模型改成可用的 OpenAI 模型名。
+	        </p>
         ${code(
           "bash",
           `
@@ -809,30 +643,49 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL="gpt-5.4"
 claude
         `,
         )}
+	      </section>
+
+	      <section>
+	        <h2>5. Claude Code 的 VS Code 插件可以使用吗</h2>
+	        <p>
+	          可以。在 VS Code 用户 <code class="inline-code">settings.json</code> 里加入：
+	        </p>
+        ${code(
+          "json",
+          `
+{
+  "claudeCode.environmentVariables": [
+    { "name": "ANTHROPIC_BASE_URL", "value": "${ANTHROPIC_SDK_BASE}" },
+    { "name": "ANTHROPIC_AUTH_TOKEN", "value": "sk-your-api-token" },
+    { "name": "ANTHROPIC_MODEL", "value": "gpt-5.4" },
+    { "name": "ANTHROPIC_DEFAULT_OPUS_MODEL", "value": "gpt-5.4" },
+    { "name": "ANTHROPIC_DEFAULT_SONNET_MODEL", "value": "gpt-5.4" },
+    { "name": "ANTHROPIC_DEFAULT_HAIKU_MODEL", "value": "gpt-5.4" }
+  ],
+  "claudeCode.preferredLocation": "panel"
+}
+        `,
+        )}
+        <p>
+          把 <code class="inline-code">sk-your-api-token</code> 换成自己的 API Token，保存后重载 VS Code 窗口。
+        </p>
         <div class="doc-image-wrap">
           <div class="doc-image-frame">
-            <img class="doc-image" src="${FAQ_CLAUDE_CODE_OPENAI_IMAGE}" alt="Claude Code 使用 OpenAI 模型的环境变量配置示例" loading="lazy" />
+            <picture>
+              <source srcset="${FAQ_CLAUDE_CODE_VSCODE_SETTINGS_IMAGE}" type="image/webp" />
+              <img class="doc-image" src="${FAQ_CLAUDE_CODE_VSCODE_SETTINGS_FALLBACK_IMAGE}" alt="Claude Code VS Code 插件 settings.json 环境变量配置示例" width="1440" height="875" loading="lazy" decoding="async" />
+            </picture>
           </div>
-          <p class="doc-image-caption">设置 Claude Code 的 Anthropic 兼容环境变量后，可以让它使用 OpenAI 模型名。</p>
-        </div>
-      </section>
-
-      <section>
-        <h2>4. Claude Code 的 VS Code 插件可以使用吗</h2>
-        <p>
-          不可以。目前 Claude Code 的 VS Code 插件不支持自定义 Base URL 和 API Key，所以不能直接接入二狗子的自定义接口。
-        </p>
-        <p>
-          社区已经有人提交相关 feature，但截至 <strong>2026 年 4 月 24 日</strong>，这个能力还没有实现。如果后续插件支持自定义 Base URL 和 API Key，再按官方插件能力调整配置方式。
-        </p>
-      </section>
-    `,
+	          <p class="doc-image-caption">Claude Code VS Code 插件的 settings.json 配置示例。</p>
+	        </div>
+	      </section>
+	    `,
   },
   {
     path: "/apps",
     group: "应用集成",
     title: "应用集成总览",
-    summary: "按聊天客户端、编辑器插件、CLI 工具、翻译/机器人四类整理所有应用接入方式。",
+    summary: "常见应用接入入口和地址速查。",
     keywords: [
       "应用集成",
       "Cherry Studio",
@@ -848,18 +701,12 @@ claude
       ${pageHead(
         "应用集成",
         "应用集成总览",
-        "这一组页面覆盖聊天客户端、编辑器插件、命令行工具、翻译插件和机器人平台。接入时先判断应用要你填的是站点地址、OpenAI 兼容 Base URL，还是 Claude / Gemini 原生地址，再按对应分组照着填即可。",
+        "先看地址怎么填，再进入对应应用教程。",
         "Apps",
       )}
 
-      ${callout(
-        "info",
-        "先分清字段类型",
-        `如果应用字段叫 API Host / 站点地址 / 域名，通常填写根域名；如果字段叫 Base URL / apiBase / Endpoint，这里也统一填写根域名。Trae CN 的“自定义请求地址”是例外，要填写完整的 <code class="inline-code">${TRAE_CHAT_COMPLETIONS_URL}</code>。`
-      )}
-
       <section>
-        <h2>通用地址速查</h2>
+        <h2>地址速查</h2>
         <div class="table-wrap">
           <table>
             <thead>
@@ -873,27 +720,27 @@ claude
               <tr>
                 <td>站点地址 / API Host</td>
                 <td><code class="inline-code">${API_HOST}</code></td>
-                <td>Next Chat、ChatWise，以及只收 Host 的导入链接。</td>
+                <td>Next Chat、ChatWise。</td>
               </tr>
               <tr>
                 <td>OpenAI 兼容 Base URL</td>
                 <td><code class="inline-code">${OPENAI_BASE}</code></td>
-                <td>Lobe Chat、Chatbox、Continue、多数桌面客户端与 IDE 插件。</td>
+                <td>Lobe Chat、Chatbox、Continue。</td>
               </tr>
               <tr>
-                <td>Trae CN 自定义请求地址</td>
+                <td>Trae CN 请求地址</td>
                 <td><code class="inline-code">${TRAE_CHAT_COMPLETIONS_URL}</code></td>
-                <td>Trae CN 添加自定义模型弹窗里的“自定义请求地址”。</td>
+                <td>Trae CN 自定义模型。</td>
               </tr>
               <tr>
                 <td>Claude 原生 Base URL</td>
                 <td><code class="inline-code">${CLAUDE_BASE}</code></td>
-                <td>Claude Code 等 Anthropic 风格客户端。</td>
+                <td>Claude Code。</td>
               </tr>
               <tr>
                 <td>Gemini 原生 Base URL</td>
                 <td><code class="inline-code">${GEMINI_BASE}</code></td>
-                <td>Gemini CLI 等 Google Gemini 风格客户端。</td>
+                <td>Gemini CLI。</td>
               </tr>
             </tbody>
           </table>
@@ -905,76 +752,29 @@ claude
         <div class="card-grid">
           <a class="link-card" href="#/apps/cherry-studio">
             <strong>Cherry Studio</strong>
-            <p>单独页面，覆盖提供商添加、模型切换和绘图配置。</p>
+            <p>提供商、模型、绘图。</p>
           </a>
           <a class="link-card" href="#/apps/trae-cn">
             <strong>Trae CN</strong>
-            <p>单独页面，覆盖 SOLO Coder 中添加自定义模型和填写请求地址。</p>
+            <p>自定义模型和请求地址。</p>
           </a>
           <a class="link-card" href="#/apps/chat-clients">
             <strong>聊天客户端</strong>
-            <p>Next Chat、Lobe Chat、Chatbox、ChatWise、uTools 等常见前端。</p>
+            <p>Next Chat、Lobe Chat、Chatbox。</p>
           </a>
           <a class="link-card" href="#/apps/editor-tools">
             <strong>编辑器与插件</strong>
-            <p>Cursor 与 Continue 的模型、补全和自定义 Base URL 配置。</p>
+            <p>Cursor、Continue。</p>
           </a>
           <a class="link-card" href="#/apps/cli-tools">
             <strong>CLI 与编码助手</strong>
-            <p>Claude Code、Codex CLI、Factory Droid CLI、Gemini CLI、OpenCode。</p>
+            <p>Claude Code、Codex、Gemini CLI。</p>
           </a>
           <a class="link-card" href="#/apps/translator-bots">
             <strong>翻译工具与机器人</strong>
-            <p>FluentRead、LunaTranslator、LangBot 的接入和模型选择。</p>
+            <p>FluentRead、LunaTranslator、LangBot。</p>
           </a>
         </div>
-      </section>
-
-      <section>
-        <h2>本页覆盖的应用</h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>分组</th>
-                <th>应用</th>
-                <th>推荐入口</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>聊天客户端</td>
-                <td>Cherry Studio、Next Chat、Lobe Chat、Chatbox、ChatWise、uTools-ChatGPT 好友</td>
-                <td>优先走 OpenAI 兼容。</td>
-              </tr>
-              <tr>
-                <td>编辑器插件</td>
-                <td>Trae CN、Cursor、Continue</td>
-                <td>Trae CN 使用完整 Chat Completions 请求地址；Cursor / Continue 优先走 OpenAI 兼容。</td>
-              </tr>
-              <tr>
-                <td>CLI 工具</td>
-                <td>Claude Code、OpenAI Codex CLI、Factory Droid CLI、Gemini CLI、OpenCode</td>
-                <td>按各自原生环境变量或配置文件填写。</td>
-              </tr>
-              <tr>
-                <td>翻译与机器人</td>
-                <td>FluentRead、LunaTranslator、LangBot</td>
-                <td>插件类通常可一键导入，机器人/知识库类额外关注 embedding 模型。</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section>
-        <h2>接入前自检</h2>
-        <ul>
-          <li>先准备一枚可用 API Key，并确认该 Key 所在分组已经开放你要用的模型。</li>
-          <li>文本、多模态、图片、补全可能对应不同模型，客户端里看不到模型时优先检查模型名与权限。</li>
-          <li>同一个应用里如果同时存在 Host 和 Base URL 两种字段，统一使用根域名，不要自己再拼额外路径。</li>
-          <li>截图型原教程没有把字段逐项写出来的地方，我已经按其 OpenAI 兼容接入方式补成可执行配置；如果你的应用版本 UI 不同，以字段含义为准。</li>
-        </ul>
       </section>
     `,
   },
