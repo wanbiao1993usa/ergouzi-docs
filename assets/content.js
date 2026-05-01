@@ -27,6 +27,19 @@ const TRAE_SETTINGS_ENTRY_IMAGE = "./assets/trae-cn/open-settings.webp";
 const TRAE_MODEL_MANAGEMENT_IMAGE = "./assets/trae-cn/model-management.webp";
 const TRAE_ADD_MODEL_IMAGE = "./assets/trae-cn/add-model-dialog.webp";
 const TRAE_CHAT_COMPLETIONS_URL = `${API_HOST}/v1/chat/completions`;
+const CC_SWITCH_DOWNLOAD_IMAGE = "./assets/cc-switch/download-release.png";
+const CC_SWITCH_MAIN_IMAGE = "./assets/cc-switch/ccswitch-main.png";
+const CC_SWITCH_CLAUDE_ADD_IMAGE = "./assets/cc-switch/claude-1.png";
+const CC_SWITCH_CLAUDE_FORM_IMAGE = "./assets/cc-switch/claude-2.png";
+const CC_SWITCH_CLAUDE_ENABLE_IMAGE = "./assets/cc-switch/claude-3.png";
+const CC_SWITCH_SETTINGS_ENTRY_IMAGE = "./assets/cc-switch/claude-4.png";
+const CC_SWITCH_SETTINGS_TOGGLE_IMAGE = "./assets/cc-switch/claude-5.png";
+const CC_SWITCH_CLAUDE_TEST_IMAGE = "./assets/cc-switch/claude-6.png";
+const CC_SWITCH_OPENAI_ENTRY_IMAGE = "./assets/cc-switch/openai-1.png";
+const CC_SWITCH_OPENAI_ADD_IMAGE = "./assets/cc-switch/openai-2.png";
+const CC_SWITCH_OPENAI_FORM_IMAGE = "./assets/cc-switch/openai-3.png";
+const CC_SWITCH_OPENAI_CONFIG_IMAGE = "./assets/cc-switch/openai-4.png";
+const CC_SWITCH_OPENAI_ENABLE_IMAGE = "./assets/cc-switch/openai-5.png";
 
 const escapeHtml = (value) =>
   value
@@ -78,6 +91,7 @@ export const navSections = [
       "/apps",
       "/apps/cherry-studio",
       "/apps/trae-cn",
+      "/apps/cc-switch",
       "/apps/chat-clients",
       "/apps/editor-tools",
       "/apps/cli-tools",
@@ -693,6 +707,7 @@ claude
       "Lobe Chat",
       "Cursor",
       "Claude Code",
+      "CC Switch",
       "LangBot",
       "FluentRead",
       "LunaTranslator",
@@ -757,6 +772,10 @@ claude
           <a class="link-card" href="#/apps/trae-cn">
             <strong>Trae CN</strong>
             <p>自定义模型和请求地址。</p>
+          </a>
+          <a class="link-card" href="#/apps/cc-switch">
+            <strong>CC Switch</strong>
+            <p>统一管理 Claude Code、Codex CLI、Gemini CLI、OpenCode 和 OpenClaw 的供应商配置。</p>
           </a>
           <a class="link-card" href="#/apps/chat-clients">
             <strong>聊天客户端</strong>
@@ -1846,6 +1865,302 @@ gemini
           <li>模型名报错：去模型广场确认当前分组是否支持该模型，再把模型 ID 改成可用模型名。</li>
           <li>设置页没有“自定义请求地址”：说明 Trae CN 版本或入口不同，优先升级客户端；旧版本再考虑 Trae-Proxy 这类代理方案。</li>
         </ul>
+      </section>
+    `,
+  },
+  {
+    path: "/apps/cc-switch",
+    group: "应用集成",
+    title: "CC Switch",
+    summary: "使用 CC Switch 管理 Claude Code 与 OpenAI / Codex 供应商配置，并在本地完成切换与验证。",
+    keywords: [
+      "CC Switch",
+      "Claude Code",
+      "Codex CLI",
+      "OpenAI",
+      "Gemini CLI",
+      "OpenCode",
+      "OpenClaw",
+      "供应商",
+      "API Key",
+      "apiKey",
+    ],
+    content: `
+      ${pageHead(
+        "应用集成",
+        "CC Switch 配置教程",
+        "这页把 CC Switch 最常见的两条接入主线放到一起：一条给 Claude Code，一条给 OpenAI / Codex。先选你要配置的对象，再按对应步骤填写和切换。",
+        "Desktop App",
+      )}
+
+      ${callout(
+        "info",
+        "先把目标收窄",
+        "这页不讨论 CC Switch 的插件、市场、Skills 或复杂 JSON，只保留 Claude Code 和 OpenAI / Codex 接入二狗子所必需的最小步骤。"
+      )}
+
+      <section>
+        <h2>这页适合谁</h2>
+        <p>
+          如果你不想手动来回改环境变量、auth 文件或本地配置，CC Switch 会更省事。它的作用不是改变底层协议，而是帮你把不同 CLI 的供应商配置统一收口，并在本地一键切换。
+        </p>
+        <ul>
+          <li><strong>Claude Code</strong> 这条线填写的是 Claude / Anthropic 风格地址：<code class="inline-code">${CLAUDE_BASE}</code>。</li>
+          <li><strong>OpenAI / Codex</strong> 这条线填写的是 OpenAI 兼容地址：<code class="inline-code">${OPENAI_BASE}/v1</code>。</li>
+          <li>这里不建议直接照抄 CC Switch 默认生成的整段复杂配置；先把基础接通，再考虑额外插件、市场或状态栏。</li>
+          <li>如果你只用一个 CLI，也可以直接看 <a href="#/apps/cli-tools">CLI 与编码助手</a> 页面手动配置。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>下载 CC Switch</h2>
+        <p>
+          打开 <a href="https://github.com/farion1231/cc-switch" target="_blank" rel="noreferrer">CC Switch GitHub 仓库</a>，
+          点击右侧 <strong>Releases</strong>，下载与你系统对应的安装包。
+        </p>
+        ${docImage(
+          CC_SWITCH_DOWNLOAD_IMAGE,
+          "CC Switch GitHub 仓库中的 Releases 入口",
+          "进入 GitHub 仓库后，点击右侧 Releases 下载最新版安装包。",
+          1519,
+          922
+        )}
+      </section>
+
+      <section>
+        <h2>选择配置对象</h2>
+        <div class="tabs tabs-choice" data-tabs>
+          <div class="tab-list">
+            <button class="tab-trigger is-active" data-tab-trigger="cc-switch-claude" type="button">Claude Code</button>
+            <button class="tab-trigger" data-tab-trigger="cc-switch-openai" type="button">OpenAI / Codex</button>
+          </div>
+
+          <div class="tab-panel is-active" data-tab-panel="cc-switch-claude">
+            <section>
+              <h3>第一步：进入 Claude 页面并添加供应商</h3>
+              <p>
+                安装完成后打开 CC Switch，先点击顶部的 <strong>Claude</strong>，再点击右上角的 <strong>+</strong> 添加新的 Claude 供应商。
+              </p>
+              ${docImage(
+                CC_SWITCH_MAIN_IMAGE,
+                "CC Switch 主界面中的 Claude 标签与添加按钮",
+                "先切到 Claude，再点击右上角的 + 添加新的 Claude 供应商。",
+                1398,
+                817
+              )}
+            </section>
+
+            <section>
+              <h3>第二步：选择自定义配置</h3>
+              <p>
+                在“添加新供应商”页面里，选择 <strong>自定义配置</strong>。这样可以手动填写 Claude 供应商名称、API Key 和请求地址。
+              </p>
+              ${docImage(
+                CC_SWITCH_CLAUDE_ADD_IMAGE,
+                "CC Switch 添加新供应商页面中的自定义配置入口",
+                "在 Claude 供应商页选择“自定义配置”，准备手动填写二狗子接口。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>第三步：填写 Claude 供应商信息</h3>
+              <p>
+                这一步只填最基础的三个字段即可：供应商名称、API Key 和请求地址。对于 Claude 供应商，请求地址填写
+                <code class="inline-code">${CLAUDE_BASE}</code>，不要以斜杠结尾。
+              </p>
+              <ul>
+                <li><strong>供应商名称</strong>：可以写 <code class="inline-code">Claude</code> 或 <code class="inline-code">Ergouzi-Claude</code>。</li>
+                <li><strong>API Key</strong>：填写你在二狗子控制台创建的 API Token。</li>
+                <li><strong>请求地址</strong>：填写 <code class="inline-code">${CLAUDE_BASE}</code>。</li>
+                <li><strong>官网链接</strong>：不是必填项，可以留空。</li>
+              </ul>
+              ${docImage(
+                CC_SWITCH_CLAUDE_FORM_IMAGE,
+                "CC Switch Claude 供应商表单中的名称、API Key 和请求地址",
+                "供应商名称可自定义，API Key 填二狗子 Token，请求地址填写 https://ergouzi.life。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>第四步：先测试，再启用</h3>
+              <p>
+                回到 Claude 供应商列表后，不要直接切换。先点击供应商右侧的 <strong>测试</strong>，确认上方弹出“Claude 运行正常”之类的通过通知，再点击 <strong>启用</strong> 完成切换。
+              </p>
+              ${callout(
+                "info",
+                "测试和启用不要混成一步",
+                "测试通过只说明当前供应商配置可连通；点击启用后，Claude Code 才会真正切换到这套配置。"
+              )}
+              ${docImage(
+                CC_SWITCH_CLAUDE_ENABLE_IMAGE,
+                "CC Switch Claude 供应商列表中的测试结果与启用按钮",
+                "先点击测试，看到上方通过提示后，再点击“启用”完成切换。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>第五步：打开设置页</h3>
+              <p>
+                如果你后面要优化 Claude Code 的接入体验，可以点击左上角的齿轮进入 CC Switch 设置。
+              </p>
+              ${docImage(
+                CC_SWITCH_SETTINGS_ENTRY_IMAGE,
+                "CC Switch 左上角齿轮设置按钮",
+                "点击左上角齿轮进入设置页面。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>第六步：开启跳过初次安装确认</h3>
+              <p>
+                在设置页中，建议开启 <strong>跳过 Claude Code 初次安装确认</strong>。这个选项的作用，是跳过 Claude 默认登录确认流程，让你在切换到当前供应商后可以直接使用。
+              </p>
+              ${docImage(
+                CC_SWITCH_SETTINGS_TOGGLE_IMAGE,
+                "CC Switch 设置页中的跳过 Claude Code 初次安装确认开关",
+                "建议开启“跳过 Claude Code 初次安装确认”，这样启动 Claude Code 时可以直接进入当前供应商配置。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>第七步：启动 Claude Code 验证</h3>
+              <p>
+                切换完成后，打开终端。如果你看到 Claude Code 处于中断或未启动状态，直接输入 <code class="inline-code">claude</code> 启动，再发一条简单消息测试是否正常回复。
+              </p>
+              ${callout(
+                "info",
+                "最后以实际对话为准",
+                "CC Switch 的测试通过和本地切换成功，只说明配置已经落地。最终还是要以 Claude Code 里能否正常启动、正常回复作为准绳。"
+              )}
+              ${docImage(
+                CC_SWITCH_CLAUDE_TEST_IMAGE,
+                "Claude Code 终端窗口中的启动与测试对话",
+                "如果 Claude Code 还没启动，就先输入 claude；随后发一条简单消息，确认它已经按当前供应商配置正常工作。",
+                1156,
+                644
+              )}
+            </section>
+
+            <section>
+              <h3>Claude 排查建议</h3>
+              <ul>
+                <li>Claude 页面测试失败：先检查 API Key 是否复制完整，请求地址是否填写为 <code class="inline-code">${CLAUDE_BASE}</code>。</li>
+                <li>测试通过但 Claude Code 不正常：先删除复杂的 Claude JSON、插件、marketplace、memory 或 LSP 配置，只保留最小可用配置。</li>
+                <li>切换后还是走旧配置：完全关闭终端，再重新执行 <code class="inline-code">claude</code>。</li>
+                <li>模型报 503：去模型广场确认当前令牌分组是否支持该模型。</li>
+              </ul>
+            </section>
+          </div>
+
+          <div class="tab-panel" data-tab-panel="cc-switch-openai">
+            <section>
+              <h3>第一步：进入 Codex 页面并添加供应商</h3>
+              <p>
+                在 CC Switch 顶部切换到 <strong>Codex</strong>，再点击右上角的 <strong>+</strong> 添加新的 OpenAI / Codex 供应商。
+              </p>
+              ${docImage(
+                CC_SWITCH_OPENAI_ENTRY_IMAGE,
+                "CC Switch 主界面中的 Codex 标签与添加按钮",
+                "先切到 Codex，再点击右上角的 + 添加新的 OpenAI / Codex 供应商。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>第二步：选择自定义配置并填写名称</h3>
+              <p>
+                在“添加新供应商”页面中，选择 <strong>自定义配置</strong>，然后填写供应商名称。这里的名称只影响你在本地切换时的识别，不影响请求本身。
+              </p>
+              ${docImage(
+                CC_SWITCH_OPENAI_ADD_IMAGE,
+                "CC Switch Codex 供应商页面中的自定义配置与供应商名称",
+                "选择“自定义配置”，再填写供应商名称，例如 OpenAI 或 Ergouzi-OpenAI。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>第三步：填写 API Key、请求地址和模型</h3>
+              <p>
+                对于 OpenAI / Codex 这条线，请求地址要填写 OpenAI 兼容入口，也就是 <code class="inline-code">${OPENAI_BASE}/v1</code>。模型名称可以先用
+                <code class="inline-code">gpt-5.4</code> 这类稳定文本模型验证。
+              </p>
+              <ul>
+                <li><strong>API Key</strong>：填写你在二狗子控制台创建的 API Token。</li>
+                <li><strong>API 请求地址</strong>：填写 <code class="inline-code">${OPENAI_BASE}/v1</code>。</li>
+                <li><strong>模型名称</strong>：例如 <code class="inline-code">gpt-5.4</code>。</li>
+              </ul>
+              ${docImage(
+                CC_SWITCH_OPENAI_FORM_IMAGE,
+                "CC Switch OpenAI / Codex 供应商表单中的 API Key、请求地址和模型名称",
+                "OpenAI / Codex 这条线填写的是 https://ergouzi.life/v1，并指定一个可用模型名，例如 gpt-5.4。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>第四步：确认 auth.json 和 config.toml 自动生成</h3>
+              <p>
+                CC Switch 会自动生成 Codex 需要的 <code class="inline-code">auth.json</code> 和 <code class="inline-code">config.toml</code>。
+                大多数情况下保持默认生成结果即可，不需要手动改成复杂配置。
+              </p>
+              ${callout(
+                "info",
+                "先用默认生成结果接通",
+                "如果只是验证 OpenAI / Codex 能否通过二狗子使用，先不要引入额外自定义项。等基础链路稳定后，再按需调整推理强度或上下文窗口。"
+              )}
+              ${docImage(
+                CC_SWITCH_OPENAI_CONFIG_IMAGE,
+                "CC Switch 自动生成的 auth.json 与 config.toml",
+                "确认 auth.json 已写入 API Key，config.toml 已写入 provider、模型和请求地址，然后点击“添加”。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>第五步：先测试，再启用</h3>
+              <p>
+                添加完成后，先点击右侧的 <strong>测试</strong>，看到上方弹出“OpenAI 运行正常”之类的通过通知，再点击 <strong>启用</strong> 完成切换。
+              </p>
+              ${callout(
+                "info",
+                "OpenAI 这条线也遵循相同原则",
+                "测试通过说明当前配置可连通；点击启用后，Codex 侧才会真正切换到这套供应商配置。"
+              )}
+              ${docImage(
+                CC_SWITCH_OPENAI_ENABLE_IMAGE,
+                "CC Switch OpenAI / Codex 供应商列表中的测试结果与启用按钮",
+                "先测试，看到上方通过通知后，再点击“启用”完成切换。",
+                1398,
+                784
+              )}
+            </section>
+
+            <section>
+              <h3>OpenAI / Codex 排查建议</h3>
+              <ul>
+                <li>测试失败：优先检查 API 请求地址是否填写为 <code class="inline-code">${OPENAI_BASE}/v1</code>，不要漏掉 <code class="inline-code">/v1</code>。</li>
+                <li>模型不可用：先换成当前分组稳定支持的文本模型，例如 <code class="inline-code">gpt-5.4</code>，再继续测试。</li>
+                <li>切换后终端里还是旧配置：关闭终端后重新打开，再启动对应 CLI。</li>
+                <li>如果只想手动配置 Codex，也可以回到 <a href="#/apps/cli-tools">CLI 与编码助手</a> 页面按工具单独设置。</li>
+              </ul>
+            </section>
+          </div>
+        </div>
       </section>
     `,
   },

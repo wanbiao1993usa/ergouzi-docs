@@ -1062,6 +1062,69 @@ pre code {
   display: block;
 }
 
+.tabs-choice {
+  border-radius: 28px;
+}
+
+.tabs-choice .tab-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: 24px;
+  background: rgba(232, 240, 252, 0.9);
+}
+
+.tabs-choice .tab-trigger {
+  width: 100%;
+  min-height: 132px;
+  padding: 24px 22px;
+  border: 1px solid rgba(208, 220, 241, 0.96);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--text);
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: left;
+  line-height: 1.25;
+  box-shadow: 0 16px 36px rgba(69, 95, 150, 0.08);
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.tabs-choice .tab-trigger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 40px rgba(69, 95, 150, 0.12);
+}
+
+.tabs-choice .tab-trigger.is-active {
+  border-color: rgba(97, 150, 255, 0.22);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 249, 255, 0.96));
+  color: #217df6;
+  box-shadow: 0 24px 44px rgba(66, 121, 255, 0.14);
+}
+
+.tabs-choice .tab-panel {
+  padding: 4px 18px 14px;
+}
+
+@media (max-width: 820px) {
+  .tabs-choice .tab-list {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .tabs-choice .tab-trigger {
+    min-height: 96px;
+    padding: 18px 18px;
+    font-size: 1.16rem;
+    border-radius: 24px;
+  }
+}
+
 .page-nav {
   display: flex;
   justify-content: space-between;
@@ -1739,6 +1802,29 @@ html[data-theme="dark"] .tab-trigger.is-active {
   background:
     linear-gradient(135deg, rgba(79, 103, 255, 0.18), rgba(20, 184, 166, 0.1)),
     rgba(255, 255, 255, 0.04);
+  color: #eff6ff;
+}
+
+html[data-theme="dark"] .tabs-choice .tab-list {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+html[data-theme="dark"] .tabs-choice .tab-trigger {
+  border-color: rgba(148, 163, 184, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: #dbe5f3;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .tabs-choice .tab-trigger:hover {
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.26);
+}
+
+html[data-theme="dark"] .tabs-choice .tab-trigger.is-active {
+  border-color: rgba(90, 169, 255, 0.24);
+  background:
+    linear-gradient(135deg, rgba(79, 103, 255, 0.2), rgba(20, 184, 166, 0.12)),
+    rgba(255, 255, 255, 0.06);
   color: #eff6ff;
 }
 

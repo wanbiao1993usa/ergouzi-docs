@@ -1,4 +1,4 @@
-import { navSections, pages } from "./content.js?v=20260427-9";
+import { navSections, pages } from "./content.js?v=20260427-10";
 
 const pageMap = new Map(pages.map((page) => [page.path, page]));
 
@@ -285,6 +285,7 @@ function setupTabs() {
       panels.forEach((panel) => {
         panel.classList.toggle("is-active", panel.dataset.tabPanel === tabName);
       });
+      renderToc();
     };
 
     triggers.forEach((trigger) => {
@@ -296,8 +297,14 @@ function setupTabs() {
   });
 }
 
+const getVisibleHeadings = () =>
+  [...article.querySelectorAll("h2")].filter((heading) => {
+    const parentTabPanel = heading.closest("[data-tab-panel]");
+    return !parentTabPanel || parentTabPanel.classList.contains("is-active");
+  });
+
 function renderToc() {
-  const headings = [...article.querySelectorAll("h2, h3")];
+  const headings = getVisibleHeadings();
   toc.innerHTML = "";
 
   if (!headings.length) return;
@@ -318,7 +325,7 @@ function renderToc() {
   headings.forEach((heading) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `toc-link ${heading.tagName === "H3" ? "is-sub" : ""}`;
+    button.className = "toc-link";
     button.textContent = heading.textContent || "";
     button.addEventListener("click", () => {
       document.getElementById(heading.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
