@@ -91,9 +91,10 @@ assert_file_contains "${NPM_LOG}" "ci"
 assert_file_contains "${NPM_LOG}" "run build"
 assert_file_contains "${SITE_DIR}/index.html" "built dist"
 assert_file_contains "${SITE_DIR}/assets/test.txt" "built asset"
+assert_file_contains "${SERVICE_FILE}" "serve_spa.py"
 assert_file_contains "${SERVICE_FILE}" "--directory ${SITE_DIR}"
 assert_file_contains "${SYSTEMCTL_LOG}" "daemon-reload"
 assert_file_contains "${SYSTEMCTL_LOG}" "enable ergouzi-docs"
 assert_file_contains "${SYSTEMCTL_LOG}" "restart ergouzi-docs"
 
-printf 'ok - deploy script builds dist and publishes it\n'
+printf 'ok - deploy script builds dist, publishes it, and serves SPA routes\n'
