@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap");
+
+:root {
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-soft: #f5f3ff;
+  --text: #0a0a0a;
+  --text-secondary: #525252;
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
+  --accent: #059669;
+  --accent-hover: #047857;
+  --border: #0a0a0a;
+  --border-width: 3px;
+  --shadow: 6px 6px 0 var(--border);
+  --shadow-hover: 10px 10px 0 var(--border);
+  --radius: 14px;
+  --container: 1100px;
+  --font-sans: "Space Grotesk", "Noto Sans SC", system-ui, sans-serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "Space Mono", "JetBrains Mono", monospace;
+
+  --card-1: #6ee7b7;
+  --card-2: #fcd34d;
+  --card-3: #fb7185;
+  --card-4: #67e8f9;
+  --card-5: #fdba74;
+  --card-6: #c4b5fd;
+}
