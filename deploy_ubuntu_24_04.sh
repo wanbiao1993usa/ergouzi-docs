@@ -8,7 +8,6 @@ SITE_DIR="${SITE_DIR:-/var/www/${APP_NAME}}"
 LISTEN_PORT="${LISTEN_PORT:-3001}"
 BIND_ADDRESS="${BIND_ADDRESS:-127.0.0.1}"
 SERVICE_FILE="${SERVICE_FILE:-/etc/systemd/system/${SERVICE_NAME}.service}"
-SERVER_ENTRY="${SITE_DIR}/serve_spa.py"
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PACKAGE_JSON="${SCRIPT_DIR}/package.json"
@@ -97,53 +96,6 @@ cp -a "${BUILD_OUTPUT_DIR}/." "${SITE_DIR}/"
 find "${SITE_DIR}" -type d -exec chmod 755 {} +
 find "${SITE_DIR}" -type f -exec chmod 644 {} +
 
-echo "==> 写入 SPA 静态服务入口 ${SERVER_ENTRY}"
-cat > "${SERVER_ENTRY}" <<'PY'
-from __future__ import annotations
-
-import argparse
-import os
-from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
-from urllib.parse import unquote, urlsplit
-
-
-class SpaStaticHandler(SimpleHTTPRequestHandler):
-    def send_head(self):
-        original_path = self.path
-        parsed = urlsplit(original_path)
-        request_path = unquote(parsed.path)
-        candidate = Path(self.translate_path(request_path))
-
-        # Only fall back for route-like URLs. Missing files such as images or JS
-        # should still return 404 instead of incorrectly serving index.html.
-        if not candidate.exists() and not os.path.splitext(request_path)[1]:
-            self.path = "/index.html"
-
-        try:
-            return super().send_head()
-        finally:
-            self.path = original_path
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Serve a static SPA with index.html fallback.")
-    parser.add_argument("--bind", default="127.0.0.1")
-    parser.add_argument("--port", default=3001, type=int)
-    parser.add_argument("--directory", default=os.getcwd())
-    args = parser.parse_args()
-
-    handler = partial(SpaStaticHandler, directory=args.directory)
-    server = ThreadingHTTPServer((args.bind, args.port), handler)
-    server.serve_forever()
-
-
-if __name__ == "__main__":
-    main()
-PY
-chmod 755 "${SERVER_ENTRY}"
-
 echo "==> 写入 systemd 服务 ${SERVICE_FILE}"
 install -d -m 755 "$(dirname -- "${SERVICE_FILE}")"
 cat > "${SERVICE_FILE}" <<EOF
@@ -156,7 +108,7 @@ Type=simple
 User=www-data
 Group=www-data
 WorkingDirectory=${SITE_DIR}
-ExecStart=${PYTHON_BIN} ${SERVER_ENTRY} --port ${LISTEN_PORT} --bind ${BIND_ADDRESS} --directory ${SITE_DIR}
+ExecStart=${PYTHON_BIN} -m http.server ${LISTEN_PORT} --bind ${BIND_ADDRESS} --directory ${SITE_DIR}
 Restart=always
 RestartSec=3
 
@@ -197,7 +149,7 @@ systemd 服务：
   ${SYSTEMCTL_BIN} status ${SERVICE_NAME}
   journalctl -u ${SERVICE_NAME} -n 100 --no-pager
 
-如果你希望直接对外暴露 ${LISTEN_PORT}，部署时可以改成：
+如果你希望直接对外暴露 ${LISTEN_PORT}，部署时可改成：
   sudo BIND_ADDRESS=0.0.0.0 bash ${SCRIPT_DIR}/deploy_ubuntu_24_04.sh
 
 EOF

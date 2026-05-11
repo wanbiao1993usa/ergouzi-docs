@@ -1,13 +1,13 @@
 # Ergouzi Docs
 
-静态文档站，覆盖这些内容：
+纯静态文档站，覆盖：
 
 - Cherry Studio 应用集成
 - API 集成：OpenAI 兼容、Claude 原生、Gemini 原生
 - SDK 集成：OpenAI SDK、Claude SDK、Gemini SDK
 - API 调用示例：Chat Completions、Responses、Images、Audio、Claude、Gemini
 
-## 本地开发
+## 本地预览
 
 先安装依赖：
 
@@ -28,45 +28,39 @@ npm run build
 npm run preview
 ```
 
-`npm run build` 现在会额外把两类静态文件补进 `dist/`：
-
-- `assets/`：markdown 正文里直接引用的图片和旧版静态资源
-- `legacy-static/`：旧版 hash 路由页面
-
-这样生成出来的 `dist/` 才是完整可部署的发布包。
-
 ## Ubuntu 24.04 部署
 
-项目根目录提供了一键部署脚本 [deploy_ubuntu_24_04.sh](./deploy_ubuntu_24_04.sh)。
+项目根目录提供了一个一键部署脚本 [deploy_ubuntu_24_04.sh](/Users/biaowan/projects/docs/deploy_ubuntu_24_04.sh)。
 
-再部署：
+它会完成这些事情：
+
+- 在服务器上自动安装依赖
+- 在服务器上自动执行 `npm run build`
+- 把 `dist/` 发布到 `/var/www/ergouzi-docs`
+- 写入一个 `systemd` 静态服务
+- 启用 `systemctl enable ergouzi-docs`
+- 让站点在每次开机后自动启动
+- 不安装 `nginx`，适合直接挂在现有 `caddy` 后面
+
+默认部署：
 
 ```bash
 cd /path/to/docs
 sudo bash ./deploy_ubuntu_24_04.sh
 ```
 
-这个脚本会完成这些事情：
-
-- 在服务器上自动安装依赖
-- 在服务器上自动执行 `npm run build`
-- 把 `dist/` 整体部署到 `/var/www/ergouzi-docs`
-- 写入一个 `systemd` 静态服务
-- 自动支持前端路由刷新回退到 `index.html`
-- 保留图片、旧版静态页和 Vite 构建产物
-
 如果仓库里有 `package-lock.json`，脚本会优先执行 `npm ci`；否则会回退到 `npm install`。
 
-默认监听 `127.0.0.1:3001`。
+默认会监听 `127.0.0.1:3001`。
 
-如果你希望直接对外监听，而不是只给 Caddy 反代，可以这样部署：
+如果你希望直接对外监听，而不是只给 Caddy 反代，可这样部署：
 
 ```bash
 cd /path/to/docs
 sudo BIND_ADDRESS=0.0.0.0 bash ./deploy_ubuntu_24_04.sh
 ```
 
-如果你想改端口，也可以一起指定：
+如果你想改成别的端口，也可以一起指定：
 
 ```bash
 cd /path/to/docs
