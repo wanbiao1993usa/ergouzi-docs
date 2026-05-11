@@ -9,16 +9,23 @@
 
 ## 本地预览
 
-在当前目录启动一个静态服务器即可：
+先安装依赖：
 
 ```bash
-python3 -m http.server 4173
+npm install
 ```
 
-然后访问：
+开发模式：
 
-```text
-http://127.0.0.1:4173
+```bash
+npm run dev
+```
+
+构建后的本地预览：
+
+```bash
+npm run build
+npm run preview
 ```
 
 ## Ubuntu 24.04 部署
@@ -27,7 +34,9 @@ http://127.0.0.1:4173
 
 它会完成这些事情：
 
-- 把当前 docs 部署到 `/var/www/ergouzi-docs`
+- 在服务器上自动安装依赖
+- 在服务器上自动执行 `npm run build`
+- 把 `dist/` 发布到 `/var/www/ergouzi-docs`
 - 写入一个 `systemd` 静态服务
 - 启用 `systemctl enable ergouzi-docs`
 - 让站点在每次开机后自动启动
@@ -39,6 +48,8 @@ http://127.0.0.1:4173
 cd /path/to/docs
 sudo bash ./deploy_ubuntu_24_04.sh
 ```
+
+如果仓库里有 `package-lock.json`，脚本会优先执行 `npm ci`；否则会回退到 `npm install`。
 
 默认会监听 `127.0.0.1:3001`。
 
@@ -85,8 +96,8 @@ sudo systemctl disable --now nginx
 
 ## 结构
 
-- `index.html`：文档站壳层
-- `assets/styles.css`：整体视觉与响应式布局
-- `assets/content.js`：全部文档内容与导航
-- `assets/app.js`：路由、搜索、目录、复制按钮与标签页交互
+- `src/`：React + Vite 前端源码
+- `content/`：文档 Markdown 内容
+- `assets/`：静态资源
+- `dist/`：构建产物（由 `npm run build` 生成）
 - `deploy_ubuntu_24_04.sh`：Ubuntu 24.04 一键部署脚本
