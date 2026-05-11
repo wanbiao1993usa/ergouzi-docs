@@ -3,111 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ergouzi API Docs</title>
+    <title>Ergouzi Docs</title>
     <meta
       name="description"
-      content="Ergouzi API 文档站，包含 Cherry Studio 集成、OpenAI / Claude / Gemini 接入、SDK 设置与调用示例。"
+      content="Ergouzi Docs 重构一期：新首页分流、分类路由、React 前端骨架与渐进式文档迁移。"
     />
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
-    <link rel="stylesheet" href="./assets/styles.css?v=20260427-10" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   </head>
   <body>
-    <div class="site-chrome">
-      <div class="glow glow-a"></div>
-      <div class="glow glow-b"></div>
-      <div class="glow glow-c"></div>
-    </div>
-
-    <div class="app-shell">
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-inner">
-          <a class="brand" href="#/">
-            <span class="brand-mark">E</span>
-            <span class="brand-copy">
-              <strong>Ergouzi Docs</strong>
-              <small>Gateway, SDK &amp; Examples</small>
-            </span>
-          </a>
-
-          <button class="mobile-search-button" id="mobile-search-button" type="button">
-            搜索文档
-            <kbd>/</kbd>
-          </button>
-
-          <nav class="nav-groups" id="sidebar-nav" aria-label="文档导航"></nav>
-
-          <div class="sidebar-card">
-            <span class="sidebar-card-label">默认接口地址</span>
-            <code>https://ergouzi.life</code>
-            <p>大多数接入场景优先使用 OpenAI 兼容入口。</p>
-          </div>
-        </div>
-      </aside>
-
-      <div class="main-shell">
-        <header class="topbar">
-          <div class="topbar-left">
-            <button class="icon-button" id="sidebar-toggle" type="button" aria-label="展开导航">
-              <span></span>
-              <span></span>
-            </button>
-            <div class="breadcrumbs" id="breadcrumbs"></div>
-          </div>
-
-          <div class="topbar-right">
-            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换主题">
-              <span class="theme-toggle-dot" aria-hidden="true"></span>
-              <span id="theme-toggle-text">深色模式</span>
-            </button>
-            <button class="search-button" id="search-toggle" type="button">
-              <span>搜索文档</span>
-              <kbd>/</kbd>
-            </button>
-            <a class="topbar-link" href="#/api/openai-compatible">快速开始</a>
-          </div>
-        </header>
-
-        <div class="content-grid">
-          <main class="article-wrap">
-            <article class="article" id="article" aria-live="polite"></article>
-          </main>
-          <aside class="toc" id="toc" aria-label="页面目录"></aside>
-        </div>
-      </div>
-    </div>
-
-    <div class="search-modal" id="search-modal" hidden>
-      <div class="search-backdrop" id="search-backdrop"></div>
-      <div class="search-panel" role="dialog" aria-modal="true" aria-labelledby="search-title">
-        <div class="search-panel-head">
-          <div>
-            <p class="search-eyebrow">文档搜索</p>
-            <h2 id="search-title">查找页面、协议与示例</h2>
-          </div>
-          <button class="icon-button close-button" id="search-close" type="button" aria-label="关闭搜索">
-            <span></span>
-            <span></span>
-          </button>
-        </div>
-        <label class="search-input-wrap">
-          <span>搜索关键字</span>
-          <input
-            id="search-input"
-            type="search"
-            autocomplete="off"
-            placeholder="例如：Cherry Studio、Responses、Gemini SDK"
-          />
-        </label>
-        <div class="search-hint-row">
-          <span>支持标题、摘要和关键字匹配</span>
-          <span>按 <kbd>Esc</kbd> 关闭</span>
-        </div>
-        <div class="search-results" id="search-results"></div>
-      </div>
-    </div>
-
-    <div class="mobile-backdrop" id="mobile-backdrop" hidden></div>
-
-    <script type="module" src="./assets/app.js?v=20260427-10"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ergouzi Legacy Docs</title>
+    <meta
+      name="description"
+      content="Ergouzi 旧版静态文档入口，供 React 重构迁移期对照参考。"
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="stylesheet" href="../assets/styles.css?v=20260427-10" />
+  </head>
+  <body>
+    <div class="site-chrome">
+      <div class="glow glow-a"></div>
+      <div class="glow glow-b"></div>
+      <div class="glow glow-c"></div>
+    </div>
+
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+          <a class="brand" href="#/">
+            <span class="brand-mark">E</span>
+            <span class="brand-copy">
+              <strong>Ergouzi Legacy Docs</strong>
+              <small>Legacy Reference During Migration</small>
+            </span>
+          </a>
+
+          <button class="mobile-search-button" id="mobile-search-button" type="button">
+            搜索文档
+            <kbd>/</kbd>
+          </button>
+
+          <nav class="nav-groups" id="sidebar-nav" aria-label="旧版文档导航"></nav>
+
+          <div class="sidebar-card">
+            <span class="sidebar-card-label">迁移说明</span>
+            <code>legacy-static</code>
+            <p>这份旧版页面在第一阶段保留，用来对照原有文案、截图顺序和信息层级。</p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main-shell">
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="icon-button" id="sidebar-toggle" type="button" aria-label="展开导航">
+              <span></span>
+              <span></span>
+            </button>
+            <div class="breadcrumbs" id="breadcrumbs"></div>
+          </div>
+
+          <div class="topbar-right">
+            <a class="topbar-link" href="/">返回新版首页</a>
+            <button class="search-button" id="search-toggle" type="button">
+              <span>搜索旧版文档</span>
+              <kbd>/</kbd>
+            </button>
+          </div>
+        </header>
+
+        <div class="content-grid">
+          <main class="article-wrap">
+            <article class="article" id="article" aria-live="polite"></article>
+          </main>
+          <aside class="toc" id="toc" aria-label="旧版页面目录"></aside>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-modal" id="search-modal" hidden>
+      <div class="search-backdrop" id="search-backdrop"></div>
+      <div class="search-panel" role="dialog" aria-modal="true" aria-labelledby="search-title">
+        <div class="search-panel-head">
+          <div>
+            <p class="search-eyebrow">旧版搜索</p>
+            <h2 id="search-title">查找旧版页面与示例</h2>
+          </div>
+          <button class="icon-button close-button" id="search-close" type="button" aria-label="关闭搜索">
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+        <label class="search-input-wrap">
+          <span>搜索关键词</span>
+          <input
+            id="search-input"
+            type="search"
+            autocomplete="off"
+            placeholder="例如：Cherry Studio、Responses、Gemini SDK"
+          />
+        </label>
+        <div class="search-hint-row">
+          <span>旧站内容仅用于迁移期参考</span>
+          <span>按 <kbd>Esc</kbd> 关闭</span>
+        </div>
+        <div class="search-results" id="search-results"></div>
+      </div>
+    </div>
+
+    <div class="mobile-backdrop" id="mobile-backdrop" hidden></div>
+
+    <script type="module" src="../assets/app.js?v=20260427-10"></script>
+  </body>
+</html>
